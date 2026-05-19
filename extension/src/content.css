@@ -1,0 +1,338 @@
+#navia-x-root {
+  all: initial;
+}
+
+#navia-x-root,
+#navia-x-root * {
+  box-sizing: border-box;
+  font-family:
+    "SF Pro Display", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+#navia-x-root .navia-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  pointer-events: none;
+}
+
+#navia-x-root .navia-interactive {
+  pointer-events: auto;
+}
+
+#navia-x-root .navia-hidden {
+  display: none !important;
+}
+
+#navia-x-root .navia-bubble {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 112px;
+  height: 82px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(125, 211, 252, 0.32), transparent 38%),
+    linear-gradient(180deg, rgba(10, 18, 39, 0.84), rgba(7, 12, 28, 0.78));
+  box-shadow:
+    0 22px 60px rgba(3, 7, 18, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(22px);
+  cursor: grab;
+}
+
+#navia-x-root .navia-bubble:active {
+  cursor: grabbing;
+}
+
+#navia-x-root .navia-bubble-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+#navia-x-root .navia-bubble-mark img {
+  width: 32px;
+  height: 32px;
+}
+
+#navia-x-root .navia-bubble-copy {
+  min-width: 0;
+}
+
+#navia-x-root .navia-bubble-copy strong {
+  display: block;
+  color: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#navia-x-root .navia-bubble-copy span {
+  display: block;
+  margin-top: 4px;
+  color: rgba(226, 232, 240, 0.72);
+  font-size: 11px;
+}
+
+#navia-x-root .navia-confirm {
+  position: fixed;
+  max-width: 360px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top left, rgba(96, 165, 250, 0.22), transparent 32%),
+    rgba(9, 16, 32, 0.9);
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
+  backdrop-filter: blur(20px);
+}
+
+#navia-x-root .navia-confirm-title {
+  color: rgba(226, 232, 240, 0.72);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+#navia-x-root .navia-confirm-preview {
+  margin-top: 8px;
+  color: #f8fafc;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#navia-x-root .navia-confirm-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+#navia-x-root .navia-confirm-note {
+  color: rgba(148, 163, 184, 0.9);
+  font-size: 12px;
+}
+
+#navia-x-root .navia-pill-btn,
+#navia-x-root .navia-icon-btn,
+#navia-x-root .navia-primary-btn {
+  border: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+#navia-x-root .navia-pill-btn {
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  color: #eff6ff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#navia-x-root .navia-panel {
+  position: fixed;
+  width: 430px;
+  min-width: 380px;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(96, 165, 250, 0.22), transparent 32%),
+    linear-gradient(180deg, rgba(7, 14, 30, 0.92), rgba(3, 8, 21, 0.9));
+  box-shadow:
+    0 36px 120px rgba(2, 6, 23, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px);
+  overflow: hidden;
+  resize: both;
+}
+
+#navia-x-root .navia-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: grab;
+}
+
+#navia-x-root .navia-panel-header:active {
+  cursor: grabbing;
+}
+
+#navia-x-root .navia-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+#navia-x-root .navia-header-copy {
+  min-width: 0;
+}
+
+#navia-x-root .navia-header-copy strong {
+  display: block;
+  color: #f8fafc;
+  font-size: 14px;
+}
+
+#navia-x-root .navia-header-copy span {
+  display: block;
+  margin-top: 4px;
+  color: rgba(148, 163, 184, 0.84);
+  font-size: 12px;
+}
+
+#navia-x-root .navia-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#navia-x-root .navia-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+}
+
+#navia-x-root .navia-panel-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  padding: 18px;
+  gap: 16px;
+}
+
+#navia-x-root .navia-label {
+  color: rgba(148, 163, 184, 0.9);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+#navia-x-root .navia-input {
+  width: 100%;
+  min-height: 92px;
+  margin-top: 8px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  background: rgba(15, 23, 42, 0.62);
+  color: #f8fafc;
+  resize: vertical;
+  outline: none;
+}
+
+#navia-x-root .navia-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#navia-x-root .navia-select {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.62);
+  color: #f8fafc;
+  outline: none;
+}
+
+#navia-x-root .navia-primary-btn {
+  padding: 12px 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #38bdf8, #1d4ed8);
+  color: #eff6ff;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 14px 40px rgba(37, 99, 235, 0.3);
+}
+
+#navia-x-root .navia-status {
+  min-height: 20px;
+  color: #38bdf8;
+  font-size: 12px;
+}
+
+#navia-x-root .navia-status[data-tone="error"] {
+  color: #fda4af;
+}
+
+#navia-x-root .navia-status[data-tone="success"] {
+  color: #86efac;
+}
+
+#navia-x-root .navia-result {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 2px;
+}
+
+#navia-x-root .navia-result-card {
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+#navia-x-root .navia-result-card h4 {
+  margin: 0;
+  color: rgba(148, 163, 184, 0.92);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+#navia-x-root .navia-result-card p,
+#navia-x-root .navia-result-card li {
+  margin: 10px 0 0;
+  color: #e2e8f0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+#navia-x-root .navia-result-card ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+}
+
+#navia-x-root .navia-result-card.takeaway {
+  background:
+    radial-gradient(circle at top right, rgba(56, 189, 248, 0.18), transparent 30%),
+    rgba(13, 35, 74, 0.78);
+}
+
+@media (max-width: 640px) {
+  #navia-x-root .navia-panel {
+    width: calc(100vw - 24px);
+    min-width: calc(100vw - 24px);
+    left: 12px !important;
+    right: 12px;
+  }
+}
+

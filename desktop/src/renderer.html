@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navia-X Desktop</title>
+    <link rel="stylesheet" href="./renderer.css" />
+  </head>
+  <body>
+    <main id="app" class="shell shell-bubble">
+      <section id="bubbleView" class="bubble-view">
+        <div id="bubbleShell" class="bubble-shell">
+          <div class="bubble-drag-zone drag-region" aria-hidden="true">
+            <div class="bubble-mark-shell">
+              <div class="bubble-mark">
+                <img src="../assets/navia-x.svg" alt="Navia-X" />
+              </div>
+            </div>
+          </div>
+          <button
+            id="bubbleExpandButton"
+            class="bubble-action"
+            type="button"
+            aria-label="Open Navia-X"
+          >
+            <span class="bubble-wordmark">
+              <span class="bubble-wordmark-main">Navia</span>
+              <span class="bubble-wordmark-accent">-X</span>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section id="panelView" class="panel-view panel-hidden">
+        <div class="panel-scene">
+          <div class="scene-stars"></div>
+          <div class="scene-glow"></div>
+
+          <div class="panel-stage">
+            <div class="panel-dialog">
+              <header class="panel-header drag-region">
+                <div class="panel-brand">
+                  <div class="logo-wrap">
+                    <img src="../assets/navia-x.svg" alt="Navia-X" />
+                  </div>
+                  <div class="brand-copy">
+                    <h1>
+                      <span class="brand-main">Navia</span>
+                      <span class="brand-accent">-X</span>
+                    </h1>
+                  </div>
+                </div>
+
+                <div class="panel-header-actions">
+                  <div class="menu-wrap">
+                    <button
+                      id="languageMenuButton"
+                      class="ghost-btn header-btn"
+                      type="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      中文
+                    </button>
+                    <div id="languageMenu" class="floating-menu menu-hidden"></div>
+                  </div>
+
+                  <button id="minimizeButton" class="icon-btn" type="button" aria-label="最小化">
+                    —
+                  </button>
+                </div>
+              </header>
+
+              <div class="panel-content">
+                <section class="panel-main">
+                  <article class="glass-panel source-card">
+                    <div class="card-topline">
+                      <span id="sourceSectionLabel" class="eyebrow">解释文本</span>
+                      <div class="card-meta">
+                        <span id="charCount" class="muted">0 / 3000</span>
+                        <button id="docsButton" class="ghost-btn header-btn" type="button">
+                          接口
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="mode-surface">
+                      <div class="mode-copy">
+                        <span class="eyebrow">当前模式</span>
+                        <strong id="activeModeValue" class="mode-title">快速</strong>
+                        <p id="activeModeCopy" class="panel-note"></p>
+                      </div>
+                      <div class="mode-actions">
+                        <span id="healthPill" class="sidebar-pill">后端离线</span>
+                        <div class="menu-wrap">
+                          <button
+                            id="modeMenuButton"
+                            class="ghost-btn header-btn"
+                            type="button"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            模式
+                          </button>
+                          <div id="modeMenu" class="floating-menu menu-hidden"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <textarea
+                      id="inputText"
+                      class="main-textarea"
+                      placeholder="把你不理解的词语、句子、代码或论文段落放到这里。按 Enter 直接解释，Shift+Enter 换行。"
+                    ></textarea>
+
+                    <div class="composer-actions">
+                      <button id="clipboardButton" class="secondary-btn dock-btn" type="button">
+                        抓取剪贴板
+                      </button>
+                      <button id="copyResultButton" class="ghost-btn dock-btn" type="button">
+                        复制结果
+                      </button>
+                      <button id="explainButton" class="confirm-pill" type="button">
+                        开始解释
+                      </button>
+                    </div>
+                  </article>
+
+                  <article class="glass-panel history-stage">
+                    <div class="card-topline">
+                      <span id="historySectionLabel" class="eyebrow">历史记录</span>
+                      <span id="clipboardHint" class="muted">等待剪贴板内容</span>
+                    </div>
+
+                    <section id="historyBoard" class="history-scroll-area"></section>
+                  </article>
+
+                  <article class="glass-panel result-stage">
+                    <div class="card-topline">
+                      <span id="resultSectionLabel" class="eyebrow">解释结果</span>
+                      <span id="resultLabel" class="muted">等待开始解释</span>
+                    </div>
+
+                    <section id="resultBoard" class="result-scroll-area"></section>
+                  </article>
+
+                  <div id="statusBar" class="status-bar" data-tone="info">
+                    桌面解释器已启动。单击悬浮球展开，或复制内容后按 Ctrl+Shift+E。
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./renderer.js"></script>
+  </body>
+</html>

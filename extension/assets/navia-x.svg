@@ -1,0 +1,21 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="navia-bg" x1="20" y1="12" x2="106" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7DD3FC"/>
+      <stop offset="0.45" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#1E3A8A"/>
+    </linearGradient>
+    <linearGradient id="navia-line" x1="30" y1="22" x2="96" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E0F2FE"/>
+      <stop offset="1" stop-color="#93C5FD"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="96" height="96" rx="28" fill="url(#navia-bg)"/>
+  <path d="M40 44H74L88 54H54L40 44Z" fill="url(#navia-line)"/>
+  <path d="M40 62H70L84 72H54L40 62Z" fill="url(#navia-line)"/>
+  <path d="M40 80H66L80 90H54L40 80Z" fill="url(#navia-line)"/>
+  <circle cx="78" cy="49" r="6" fill="#E0F2FE"/>
+  <circle cx="74" cy="67" r="6" fill="#BFDBFE"/>
+  <circle cx="70" cy="85" r="6" fill="#93C5FD"/>
+</svg>
+

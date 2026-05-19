@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navia-X Explainer</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <div class="popup-brand">
+        <img src="../assets/navia-x.svg" alt="Navia-X" />
+        <div>
+          <p>Navia-X</p>
+          <span>Browser Explainer</span>
+        </div>
+      </div>
+
+      <section class="popup-card">
+        <label class="popup-label" for="apiBase">Backend API Base</label>
+        <input id="apiBase" class="popup-input" type="text" />
+        <p class="popup-help">
+          默认连接本地 `http://localhost:8001`，扩展会把选中的词语发给后端解释。
+        </p>
+      </section>
+
+      <section class="popup-card">
+        <label class="popup-label" for="defaultMode">Default Mode</label>
+        <select id="defaultMode" class="popup-input">
+          <option value="simple">简单解释</option>
+          <option value="professional">专业解释</option>
+          <option value="exam">考试理解</option>
+          <option value="research">论文理解</option>
+          <option value="code">代码解释</option>
+        </select>
+      </section>
+
+      <button id="saveButton" class="popup-button" type="button">保存设置</button>
+      <p id="statusText" class="popup-status"></p>
+    </main>
+
+    <script src="./popup.js" type="module"></script>
+  </body>
+  </html>
