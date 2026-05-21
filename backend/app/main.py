@@ -12,6 +12,14 @@ from app.api.usage import router as usage_router
 from app.config import get_settings
 
 settings = get_settings()
+allowed_origins = [
+    "https://navia-x-git-main-llm-exp.vercel.app",
+    "https://navia-x.vercel.app",
+    "https://www.navia-x.com",
+    "https://navia-x.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 app = FastAPI(
     title=settings.app_name,
@@ -21,10 +29,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.parsed_cors_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=allowed_origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept", "Origin"],
 )
 
 app.include_router(health_router, prefix=settings.api_prefix)
