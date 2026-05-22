@@ -20,9 +20,6 @@ import { Textarea } from "@/components/ui/textarea";
 type LanguageKey = "zh-CN" | "en" | "ko" | "ja";
 
 type WorkspaceCopy = {
-  heroEyebrow: string;
-  heroTitle: string;
-  heroSubtitle: string;
   assistantLabel: string;
   assistantTagline: string;
   languageLabel: string;
@@ -79,10 +76,6 @@ const languageOptions = [
 
 const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
   "zh-CN": {
-    heroEyebrow: "LLM Explainer",
-    heroTitle: "把复杂内容讲清楚",
-    heroSubtitle:
-      "选择语言后，界面会立即同步切换，并为论文、代码、概念和专业文本返回清晰的结构化解释。",
     assistantLabel: "AI Assistant",
     assistantTagline: "你的大模型助手",
     languageLabel: "输出语言",
@@ -124,10 +117,6 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     },
   },
   en: {
-    heroEyebrow: "LLM Explainer",
-    heroTitle: "Make complex content easy to understand",
-    heroSubtitle:
-      "Switch the language and the interface updates immediately, while papers, code, concepts, and technical text are turned into clear structured explanations.",
     assistantLabel: "AI Assistant",
     assistantTagline: "Your LLM Assistant",
     languageLabel: "Output language",
@@ -170,10 +159,6 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     },
   },
   ko: {
-    heroEyebrow: "LLM Explainer",
-    heroTitle: "복잡한 내용을 더 쉽게 이해하세요",
-    heroSubtitle:
-      "언어를 바꾸면 화면이 즉시 함께 바뀌고, 논문·코드·개념·전문 텍스트를 구조화된 해설로 정리해 줍니다.",
     assistantLabel: "AI Assistant",
     assistantTagline: "당신의 LLM 도우미",
     languageLabel: "출력 언어",
@@ -216,10 +201,6 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     },
   },
   ja: {
-    heroEyebrow: "LLM Explainer",
-    heroTitle: "複雑な内容をもっと分かりやすく",
-    heroSubtitle:
-      "言語を切り替えると画面表示がすぐ更新され、論文・コード・概念・専門文書を分かりやすい構造化結果に整えます。",
     assistantLabel: "AI Assistant",
     assistantTagline: "あなたのLLMアシスタント",
     languageLabel: "出力言語",
@@ -410,15 +391,9 @@ export function ExplainerWorkspace() {
         <Card className="border-neutral-800 bg-neutral-900/95">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-xs uppercase tracking-[0.34em] text-neutral-500">
-                {copy.heroEyebrow}
-              </p>
               <h1 className="mt-3 text-3xl font-semibold text-white lg:text-4xl">
-                {copy.heroTitle}
+                navia-x：把复杂内容讲清楚
               </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-400">
-                {copy.heroSubtitle}
-              </p>
             </div>
 
             <div className="self-start rounded-[28px] border border-neutral-700 bg-neutral-800/90 px-4 py-3 shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
