@@ -441,7 +441,6 @@ async function collectSmokeState(step) {
       const panelContent = document.querySelector(".panel-content");
       const activeModeValue = document.querySelector("#activeModeValue");
       const languageValue = document.querySelector("#languageValue");
-      const clipboardButton = document.querySelector("#clipboardButton");
       const homeButton = document.querySelector('[data-page="home"]');
       const settingsButton = document.querySelector('[data-page="settings"]');
       const modeMenuButton = document.querySelector("#modeMenuButton");
@@ -479,7 +478,6 @@ async function collectSmokeState(step) {
         resultPreview: resultBoard?.innerText?.trim()?.slice(0, 320) || "",
         activeModeText: activeModeValue?.textContent?.trim() || "",
         languageText: languageValue?.textContent?.trim() || "",
-        clipboardButtonText: clipboardButton?.textContent?.trim() || "",
         homeButtonText: homeButton?.textContent?.trim() || "",
         settingsButtonText: settingsButton?.textContent?.trim() || "",
         modeButtonText: modeMenuButton?.textContent?.trim() || "",

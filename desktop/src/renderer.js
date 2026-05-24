@@ -6,9 +6,7 @@ const panelMain = document.querySelector(".panel-main");
 const bubbleExpandButton = document.querySelector("#bubbleExpandButton");
 const minimizeButton = document.querySelector("#minimizeButton");
 const docsButton = document.querySelector("#docsButton");
-const clipboardButton = document.querySelector("#clipboardButton");
 const explainButton = document.querySelector("#explainButton");
-const copyResultButton = document.querySelector("#copyResultButton");
 const inputText = document.querySelector("#inputText");
 const statusBar = document.querySelector("#statusBar");
 const historyBoard = document.querySelector("#historyBoard");
@@ -26,6 +24,23 @@ const modeMenuButton = document.querySelector("#modeMenuButton");
 const modeMenu = document.querySelector("#modeMenu");
 const languageMenuButton = document.querySelector("#languageMenuButton");
 const languageMenu = document.querySelector("#languageMenu");
+const settingsToggleButton = document.querySelector("#settingsToggleButton");
+const settingsDrawer = document.querySelector("#settingsDrawer");
+const settingsCloseButton = document.querySelector("#settingsCloseButton");
+const settingsDrawerTitle = document.querySelector("#settingsDrawerTitle");
+const monitorClipboardLabel = document.querySelector("#monitorClipboardLabel");
+const autoImportClipboardLabel = document.querySelector("#autoImportClipboardLabel");
+const autoCopyResultLabel = document.querySelector("#autoCopyResultLabel");
+const outputLanguageLabel = document.querySelector("#outputLanguageLabel");
+const defaultModeLabel = document.querySelector("#defaultModeLabel");
+const monitorClipboardInput = document.querySelector("#monitorClipboardInput");
+const autoImportClipboardInput = document.querySelector("#autoImportClipboardInput");
+const autoCopyResultInput = document.querySelector("#autoCopyResultInput");
+const outputLanguageInput = document.querySelector("#outputLanguageInput");
+const defaultModeInput = document.querySelector("#defaultModeInput");
+const settingsClipboardButton = document.querySelector("#settingsClipboardButton");
+const settingsCopyResultButton = document.querySelector("#settingsCopyResultButton");
+const saveSettingsButton = document.querySelector("#saveSettingsButton");
 
 const INPUT_LIMIT = 3000;
 const DEFAULT_USER_EMAIL = "desktop@navia-x.ai";
@@ -272,11 +287,11 @@ const translations = {
       }
     },
     hints: {
-      waiting: "等待剪贴板内容",
-      autoImported: "已自动带入最新剪贴板内容",
-      manualImported: "已抓取最新剪贴板内容",
-      shortcutImported: "快捷键已导入剪贴板内容",
-      detected: "检测到新的剪贴板文本",
+      waiting: "最近记录",
+      autoImported: "已自动导入",
+      manualImported: "已导入",
+      shortcutImported: "已快捷导入",
+      detected: "检测到新内容",
       historyLoaded: (value) => `已载入历史记录 · ${value}`
     },
     overview: {
@@ -284,12 +299,12 @@ const translations = {
       offline: (language) => `输出语言：${language}。后端未连通，解释请求暂时无法执行。`
     },
     status: {
-      ready: "桌面解释器已准备好。单击悬浮球展开，或复制内容后按 Ctrl+Shift+E。",
+      ready: "桌面解释器已准备好。单击悬浮球或按 Ctrl+Shift+E。",
       openImported: (source) => `${source}已展开，并自动带入了最新复制的内容。`,
-      openPlain: (source) => `${source}已展开，可以直接输入内容或抓取剪贴板开始解释。`,
+      openPlain: (source) => `${source}已展开，可以直接输入内容开始解释。`,
       noClipboard: "剪贴板里还没有可解释的文字。",
-      importedClipboard: "已将剪贴板文字带入中央解释区。",
-      needInput: "请先输入内容，或从剪贴板抓取要解释的文本。",
+      importedClipboard: "已将剪贴板内容带入输入区。",
+      needInput: "请先输入要解释的内容。",
       inputTooLong: (limit) => `单次输入最多 ${limit} 字，请先缩短内容。`,
       invalidEmail: "请输入有效邮箱地址，且不要使用 .local 域名。",
       explaining: "正在调用后端解释服务...",
@@ -302,7 +317,7 @@ const translations = {
       modeChanged: (modeLabel) => `已切换到 ${modeLabel} 模式。`,
       settingsSaved: "桌面设置已保存，并已重新加载历史与后端状态。",
       clipboardDetectedImported: "检测到新的复制内容，已自动带入解释区。",
-      clipboardDetectedManual: "检测到新的复制内容，你可以点击“抓取剪贴板”手动带入。",
+      clipboardDetectedManual: "检测到新的复制内容。",
       shortcutImported: "已通过全局快捷键带入最新复制内容。"
     },
     result: {
@@ -412,11 +427,11 @@ const translations = {
       }
     },
     hints: {
-      waiting: "Waiting for clipboard text",
-      autoImported: "Latest clipboard text imported automatically",
-      manualImported: "Latest clipboard text imported",
-      shortcutImported: "Clipboard text imported by shortcut",
-      detected: "New clipboard text detected",
+      waiting: "Recent records",
+      autoImported: "Imported automatically",
+      manualImported: "Imported",
+      shortcutImported: "Imported by shortcut",
+      detected: "New content detected",
       historyLoaded: (value) => `History loaded · ${value}`
     },
     overview: {
@@ -425,12 +440,12 @@ const translations = {
         `Output language: ${language}. The backend is offline, so explanation requests are temporarily unavailable.`
     },
     status: {
-      ready: "The desktop explainer is ready. Click the floating ball or press Ctrl+Shift+E after copying text.",
+      ready: "The desktop explainer is ready. Click the bubble or press Ctrl+Shift+E.",
       openImported: (source) => `${source} opened and imported the latest copied text automatically.`,
-      openPlain: (source) => `${source} opened. You can type directly or import clipboard text.`,
+      openPlain: (source) => `${source} opened. You can start typing right away.`,
       noClipboard: "There is no explainable text in the clipboard yet.",
       importedClipboard: "Clipboard text has been loaded into the input area.",
-      needInput: "Please enter some text or import it from the clipboard first.",
+      needInput: "Please enter some text first.",
       inputTooLong: (limit) => `Each request is limited to ${limit} characters. Please shorten the text first.`,
       invalidEmail: "Please enter a valid email address and avoid .local domains.",
       explaining: "Calling the backend explanation service...",
@@ -443,7 +458,7 @@ const translations = {
       modeChanged: (modeLabel) => `Switched to ${modeLabel} mode.`,
       settingsSaved: "Desktop settings were saved and data was reloaded.",
       clipboardDetectedImported: "New copied text was detected and imported automatically.",
-      clipboardDetectedManual: "New copied text was detected. You can import it manually.",
+      clipboardDetectedManual: "New copied text was detected.",
       shortcutImported: "The latest copied text was imported by the global shortcut."
     },
     result: {
@@ -553,11 +568,11 @@ const translations = {
       }
     },
     hints: {
-      waiting: "클립보드 텍스트 대기 중",
-      autoImported: "최신 클립보드 텍스트를 자동으로 불러왔습니다",
-      manualImported: "최신 클립보드 텍스트를 불러왔습니다",
-      shortcutImported: "단축키로 클립보드 텍스트를 불러왔습니다",
-      detected: "새 클립보드 텍스트가 감지되었습니다",
+      waiting: "최근 기록",
+      autoImported: "자동으로 불러왔습니다",
+      manualImported: "불러왔습니다",
+      shortcutImported: "단축키로 불러왔습니다",
+      detected: "새 내용이 감지되었습니다",
       historyLoaded: (value) => `기록 불러옴 · ${value}`
     },
     overview: {
@@ -566,12 +581,12 @@ const translations = {
         `출력 언어: ${language}. 백엔드가 연결되지 않아 설명 요청을 실행할 수 없습니다.`
     },
     status: {
-      ready: "데스크톱 설명기가 준비되었습니다. 플로팅 볼을 누르거나, 복사 후 Ctrl+Shift+E를 누르세요.",
+      ready: "데스크톱 설명기가 준비되었습니다. 플로팅 볼을 누르거나 Ctrl+Shift+E를 누르세요.",
       openImported: (source) => `${source}이(가) 열렸고 최신 복사 내용을 자동으로 가져왔습니다.`,
-      openPlain: (source) => `${source}이(가) 열렸습니다. 직접 입력하거나 클립보드 내용을 가져올 수 있습니다.`,
+      openPlain: (source) => `${source}이(가) 열렸습니다. 바로 입력해 설명을 시작하세요.`,
       noClipboard: "설명할 수 있는 클립보드 텍스트가 아직 없습니다.",
       importedClipboard: "클립보드 텍스트를 입력 영역으로 가져왔습니다.",
-      needInput: "먼저 텍스트를 입력하거나 클립보드에서 가져오세요.",
+      needInput: "먼저 설명할 텍스트를 입력하세요.",
       inputTooLong: (limit) => `한 번에 최대 ${limit}자까지 입력할 수 있습니다. 내용을 줄여 주세요.`,
       invalidEmail: "유효한 이메일 주소를 입력하고 .local 도메인은 사용하지 마세요.",
       explaining: "백엔드 설명 서비스를 호출하고 있습니다...",
@@ -584,7 +599,7 @@ const translations = {
       modeChanged: (modeLabel) => `${modeLabel} 모드로 전환했습니다.`,
       settingsSaved: "설정이 저장되었고 데이터가 다시 로드되었습니다.",
       clipboardDetectedImported: "새로 복사한 텍스트를 감지해 자동으로 가져왔습니다.",
-      clipboardDetectedManual: "새로 복사한 텍스트를 감지했습니다. 수동으로 가져올 수 있습니다.",
+      clipboardDetectedManual: "새로 복사한 텍스트를 감지했습니다.",
       shortcutImported: "전역 단축키로 최신 복사 내용을 가져왔습니다."
     },
     result: {
@@ -694,11 +709,11 @@ const translations = {
       }
     },
     hints: {
-      waiting: "クリップボードのテキストを待機中",
-      autoImported: "最新のクリップボード内容を自動で取り込みました",
-      manualImported: "最新のクリップボード内容を取り込みました",
-      shortcutImported: "ショートカットでクリップボード内容を取り込みました",
-      detected: "新しいクリップボード内容を検出しました",
+      waiting: "最近の履歴",
+      autoImported: "自動で取り込みました",
+      manualImported: "取り込みました",
+      shortcutImported: "ショートカットで取り込みました",
+      detected: "新しい内容を検出しました",
       historyLoaded: (value) => `履歴を読み込みました · ${value}`
     },
     overview: {
@@ -707,12 +722,12 @@ const translations = {
         `出力言語: ${language}。バックエンドに接続できないため、説明リクエストを実行できません。`
     },
     status: {
-      ready: "デスクトップ説明ツールの準備ができました。フローティングボールをクリックするか、コピー後に Ctrl+Shift+E を押してください。",
+      ready: "デスクトップ説明ツールの準備ができました。フローティングボールをクリックするか Ctrl+Shift+E を押してください。",
       openImported: (source) => `${source}を開き、最新のコピー内容を自動で取り込みました。`,
-      openPlain: (source) => `${source}を開きました。直接入力するか、クリップボード内容を取り込めます。`,
+      openPlain: (source) => `${source}を開きました。直接入力して説明を開始できます。`,
       noClipboard: "説明できるクリップボードのテキストがまだありません。",
       importedClipboard: "クリップボード内容を入力欄に取り込みました。",
-      needInput: "まずテキストを入力するか、クリップボードから取り込んでください。",
+      needInput: "まず説明したいテキストを入力してください。",
       inputTooLong: (limit) => `1 回の入力は最大 ${limit} 文字です。先に内容を短くしてください。`,
       invalidEmail: "有効なメールアドレスを入力し、.local ドメインは使用しないでください。",
       explaining: "バックエンド説明サービスを呼び出しています...",
@@ -725,7 +740,7 @@ const translations = {
       modeChanged: (modeLabel) => `${modeLabel} モードに切り替えました。`,
       settingsSaved: "設定を保存し、データを再読み込みしました。",
       clipboardDetectedImported: "新しいコピー内容を検出し、自動で取り込みました。",
-      clipboardDetectedManual: "新しいコピー内容を検出しました。手動で取り込めます。",
+      clipboardDetectedManual: "新しいコピー内容を検出しました。",
       shortcutImported: "グローバルショートカットで最新のコピー内容を取り込みました。"
     },
     result: {
@@ -856,7 +871,8 @@ const state = {
     kind: "waiting",
     value: ""
   },
-  openMenu: null
+  openMenu: null,
+  isSettingsOpen: false
 };
 
 let lastRenderedText = "";
@@ -958,6 +974,11 @@ function setWindowMode(mode) {
   panelView.classList.toggle("panel-hidden", !isPanel);
   appShell.classList.toggle("shell-panel", isPanel);
   appShell.classList.toggle("shell-bubble", !isPanel);
+
+  if (!isPanel) {
+    state.isSettingsOpen = false;
+    settingsDrawer.classList.add("settings-hidden");
+  }
 }
 
 function formatDate(value) {
@@ -1107,6 +1128,12 @@ function closeMenus() {
   languageMenuButton.setAttribute("aria-expanded", "false");
 }
 
+function toggleSettingsDrawer(forceState) {
+  state.isSettingsOpen =
+    typeof forceState === "boolean" ? forceState : !state.isSettingsOpen;
+  settingsDrawer.classList.toggle("settings-hidden", !state.isSettingsOpen);
+}
+
 function toggleMenu(menuName) {
   if (state.openMenu === menuName) {
     closeMenus();
@@ -1169,6 +1196,43 @@ function renderNavState() {
   renderMenus();
 }
 
+function renderSettingsDrawer() {
+  const ui = getUi();
+
+  settingsToggleButton.textContent = getLocale() === "en" ? "Setting" : ui.nav.settings;
+  settingsDrawerTitle.textContent = ui.nav.settings;
+  settingsCloseButton.setAttribute("aria-label", ui.nav.settings);
+  monitorClipboardLabel.textContent = ui.settings.monitor;
+  autoImportClipboardLabel.textContent = ui.settings.autoImport;
+  autoCopyResultLabel.textContent = ui.settings.autoCopy;
+  outputLanguageLabel.textContent = ui.settings.language;
+  defaultModeLabel.textContent = ui.settings.defaultMode;
+  settingsClipboardButton.textContent = ui.buttons.clipboard;
+  settingsCopyResultButton.textContent = ui.buttons.copy;
+  saveSettingsButton.textContent = ui.settings.save;
+
+  outputLanguageInput.innerHTML = languageCatalog
+    .map(
+      (language) =>
+        `<option value="${escapeHtml(language.key)}">${escapeHtml(getLanguageLong(language.key))}</option>`
+    )
+    .join("");
+
+  defaultModeInput.innerHTML = modeCatalog
+    .map(
+      (mode) =>
+        `<option value="${escapeHtml(mode.key)}">${escapeHtml(getModeLabel(mode))}</option>`
+    )
+    .join("");
+
+  outputLanguageInput.value = state.settings.outputLanguage;
+  defaultModeInput.value = state.currentModeKey;
+  monitorClipboardInput.checked = Boolean(state.settings.monitorClipboard);
+  autoImportClipboardInput.checked = Boolean(state.settings.autoImportClipboard);
+  autoCopyResultInput.checked = Boolean(state.settings.autoCopyResult);
+  settingsDrawer.classList.toggle("settings-hidden", !state.isSettingsOpen);
+}
+
 function renderOverview() {
   const currentMode = getModeByKey(state.currentModeKey);
   const backendOnline = (state.health?.status || "offline") !== "offline";
@@ -1219,8 +1283,6 @@ function renderStaticText() {
   sourceSectionLabel.textContent = ui.sections.source;
   historySectionLabel.textContent = ui.nav.history;
   resultSectionLabel.textContent = ui.sections.result;
-  clipboardButton.textContent = ui.buttons.clipboard;
-  copyResultButton.textContent = ui.buttons.copy;
   explainButton.textContent = ui.buttons.explain;
   docsButton.textContent = ui.buttons.api;
   minimizeButton.setAttribute("aria-label", ui.buttons.minimize);
@@ -1321,6 +1383,7 @@ function renderAll() {
   renderOverview();
   renderLayoutState();
   renderNavState();
+  renderSettingsDrawer();
   renderHistoryBoard();
   renderResultBoard();
 }
@@ -1388,29 +1451,27 @@ async function persistSettingsPatch(patch) {
 
 async function saveSettingsFromForm() {
   const ui = getUi();
-  const outputLanguageInput = document.querySelector("#outputLanguageInput");
   const apiBaseInput = document.querySelector("#apiBaseInput");
   const userEmailInput = document.querySelector("#userEmailInput");
-  const defaultModeInput = document.querySelector("#defaultModeInput");
   const shortcutInput = document.querySelector("#shortcutInput");
   const themeAccentInput = document.querySelector("#themeAccentInput");
   const backgroundStyleInput = document.querySelector("#backgroundStyleInput");
   const fontScaleInput = document.querySelector("#fontScaleInput");
   const responseDensityInput = document.querySelector("#responseDensityInput");
-  const monitorClipboardInput = document.querySelector("#monitorClipboardInput");
-  const autoImportClipboardInput = document.querySelector("#autoImportClipboardInput");
-  const autoCopyResultInput = document.querySelector("#autoCopyResultInput");
 
   await persistSettingsPatch({
-    outputLanguage: outputLanguageInput.value,
-    apiBaseUrl: apiBaseInput.value.trim() || "http://127.0.0.1:8001",
-    userEmail: normalizeUserEmail(userEmailInput.value.trim() || DEFAULT_USER_EMAIL),
-    defaultMode: defaultModeInput.value,
-    globalShortcut: shortcutInput.value.trim() || "CommandOrControl+Shift+E",
-    themeAccent: themeAccentInput.value,
-    backgroundStyle: backgroundStyleInput.value,
-    fontScale: fontScaleInput.value,
-    responseDensity: responseDensityInput.value,
+    outputLanguage: outputLanguageInput?.value || state.settings.outputLanguage,
+    apiBaseUrl: apiBaseInput?.value?.trim() || state.settings.apiBaseUrl || "http://127.0.0.1:8001",
+    userEmail: normalizeUserEmail(
+      userEmailInput?.value?.trim() || state.settings.userEmail || DEFAULT_USER_EMAIL
+    ),
+    defaultMode: defaultModeInput?.value || state.currentModeKey,
+    globalShortcut:
+      shortcutInput?.value?.trim() || state.settings.globalShortcut || "CommandOrControl+Shift+E",
+    themeAccent: themeAccentInput?.value || state.settings.themeAccent,
+    backgroundStyle: backgroundStyleInput?.value || state.settings.backgroundStyle,
+    fontScale: fontScaleInput?.value || state.settings.fontScale,
+    responseDensity: responseDensityInput?.value || state.settings.responseDensity,
     monitorClipboard: monitorClipboardInput.checked,
     autoImportClipboard: autoImportClipboardInput.checked,
     autoCopyResult: autoCopyResultInput.checked
@@ -1418,6 +1479,7 @@ async function saveSettingsFromForm() {
 
   await refreshDashboardData();
   renderAll();
+  toggleSettingsDrawer(false);
   setStatus(ui.status.settingsSaved, "success");
 }
 
@@ -1432,6 +1494,7 @@ async function importClipboardText() {
 
   setInputValue(value, "manualImported");
   focusInput();
+  toggleSettingsDrawer(false);
   setStatus(ui.status.importedClipboard, "success");
 }
 
@@ -1503,12 +1566,14 @@ async function explainText() {
 
 async function copyResult() {
   const ui = getUi();
+
   if (!lastRenderedText) {
     setStatus(ui.status.copiedEmpty, "error");
     return;
   }
 
   await navigator.clipboard.writeText(lastRenderedText);
+  toggleSettingsDrawer(false);
   setStatus(ui.status.copiedDone, "success");
 }
 
@@ -1583,16 +1648,29 @@ docsButton.addEventListener("click", async () => {
   );
 });
 
-clipboardButton.addEventListener("click", () => {
-  void importClipboardText();
+settingsToggleButton.addEventListener("click", () => {
+  closeMenus();
+  toggleSettingsDrawer();
 });
 
-copyResultButton.addEventListener("click", () => {
-  void copyResult();
+settingsCloseButton.addEventListener("click", () => {
+  toggleSettingsDrawer(false);
 });
 
 explainButton.addEventListener("click", () => {
   void explainText();
+});
+
+settingsClipboardButton.addEventListener("click", () => {
+  void importClipboardText();
+});
+
+settingsCopyResultButton.addEventListener("click", () => {
+  void copyResult();
+});
+
+saveSettingsButton.addEventListener("click", () => {
+  void saveSettingsFromForm();
 });
 
 modeMenuButton.addEventListener("click", () => {
@@ -1640,16 +1718,23 @@ historyBoard.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  if (event.target.closest(".menu-wrap")) {
-    return;
+  if (!event.target.closest(".menu-wrap")) {
+    closeMenus();
   }
 
-  closeMenus();
+  if (
+    state.isSettingsOpen &&
+    !event.target.closest("#settingsDrawer") &&
+    !event.target.closest("#settingsToggleButton")
+  ) {
+    toggleSettingsDrawer(false);
+  }
 });
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeMenus();
+    toggleSettingsDrawer(false);
   }
 });
 

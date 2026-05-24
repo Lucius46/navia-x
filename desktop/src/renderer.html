@@ -114,25 +114,10 @@
                     ></textarea>
 
                     <div class="composer-actions">
-                      <button id="clipboardButton" class="secondary-btn dock-btn" type="button">
-                        抓取剪贴板
-                      </button>
-                      <button id="copyResultButton" class="ghost-btn dock-btn" type="button">
-                        复制结果
-                      </button>
                       <button id="explainButton" class="confirm-pill" type="button">
                         开始解释
                       </button>
                     </div>
-                  </article>
-
-                  <article class="glass-panel history-stage">
-                    <div class="card-topline">
-                      <span id="historySectionLabel" class="eyebrow">历史记录</span>
-                      <span id="clipboardHint" class="muted">等待剪贴板内容</span>
-                    </div>
-
-                    <section id="historyBoard" class="history-scroll-area"></section>
                   </article>
 
                   <article class="glass-panel result-stage">
@@ -144,11 +129,78 @@
                     <section id="resultBoard" class="result-scroll-area"></section>
                   </article>
 
-                  <div id="statusBar" class="status-bar" data-tone="info">
-                    桌面解释器已启动。单击悬浮球展开，或复制内容后按 Ctrl+Shift+E。
+                  <article class="glass-panel history-stage">
+                    <div class="card-topline">
+                      <span id="historySectionLabel" class="eyebrow">历史记录</span>
+                      <span id="clipboardHint" class="muted">最近记录</span>
+                    </div>
+
+                    <section id="historyBoard" class="history-scroll-area"></section>
+                  </article>
+
+                  <div class="panel-footer">
+                    <button id="settingsToggleButton" class="footer-settings-btn" type="button">
+                      Setting
+                    </button>
+                    <div id="statusBar" class="status-bar" data-tone="info">
+                      桌面解释器已启动。单击悬浮球或按 Ctrl+Shift+E。
+                    </div>
                   </div>
                 </section>
               </div>
+
+              <aside id="settingsDrawer" class="glass-panel settings-drawer settings-hidden">
+                <div class="settings-drawer-header">
+                  <span id="settingsDrawerTitle" class="eyebrow">设置</span>
+                  <button
+                    id="settingsCloseButton"
+                    class="icon-btn settings-close-btn"
+                    type="button"
+                    aria-label="Close settings"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <div class="settings-grid settings-drawer-grid">
+                  <label class="setting-card setting-toggle-card">
+                    <span id="monitorClipboardLabel" class="setting-title">监听剪贴板</span>
+                    <input id="monitorClipboardInput" type="checkbox" />
+                  </label>
+
+                  <label class="setting-card setting-toggle-card">
+                    <span id="autoImportClipboardLabel" class="setting-title">自动带入</span>
+                    <input id="autoImportClipboardInput" type="checkbox" />
+                  </label>
+
+                  <label class="setting-card setting-toggle-card">
+                    <span id="autoCopyResultLabel" class="setting-title">自动复制结果</span>
+                    <input id="autoCopyResultInput" type="checkbox" />
+                  </label>
+
+                  <label class="setting-card">
+                    <span id="outputLanguageLabel" class="setting-title">界面与解释语言</span>
+                    <select id="outputLanguageInput" class="setting-select"></select>
+                  </label>
+
+                  <label class="setting-card">
+                    <span id="defaultModeLabel" class="setting-title">默认模式</span>
+                    <select id="defaultModeInput" class="setting-select"></select>
+                  </label>
+                </div>
+
+                <div class="settings-actions">
+                  <button id="settingsClipboardButton" class="secondary-btn" type="button">
+                    抓取剪贴板
+                  </button>
+                  <button id="settingsCopyResultButton" class="ghost-btn" type="button">
+                    复制结果
+                  </button>
+                  <button id="saveSettingsButton" class="confirm-pill settings-save-btn" type="button">
+                    保存设置
+                  </button>
+                </div>
+              </aside>
             </div>
           </div>
         </div>
