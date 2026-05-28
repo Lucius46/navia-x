@@ -20,8 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 type LanguageKey = "zh-CN" | "en" | "ko" | "ja";
 
 type WorkspaceCopy = {
-  assistantLabel: string;
-  assistantTagline: string;
+  heroLead: string;
   languageLabel: string;
   languageHelp: string;
   emailLabel: string;
@@ -90,8 +89,7 @@ const languageOptions = [
 
 const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
   "zh-CN": {
-    assistantLabel: "AI Assistant",
-    assistantTagline: "你的大模型助手",
+    heroLead: "输入论文、代码或专业文本，立即得到结构化解释与重点拆解。",
     languageLabel: "输出语言",
     languageHelp: "切换后，界面立即更新；如果已有结果，系统会自动生成对应语言的新结果。",
     emailLabel: "用户邮箱",
@@ -139,8 +137,7 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     },
   },
   en: {
-    assistantLabel: "AI Assistant",
-    assistantTagline: "Your LLM Assistant",
+    heroLead: "Paste papers, code, or technical text and get a structured explanation fast.",
     languageLabel: "Output language",
     languageHelp: "The interface updates immediately, and any existing result is regenerated in the newly selected language.",
     emailLabel: "User email",
@@ -189,8 +186,7 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     },
   },
   ko: {
-    assistantLabel: "AI Assistant",
-    assistantTagline: "당신의 LLM 도우미",
+    heroLead: "논문, 코드, 전문 텍스트를 넣으면 구조화된 해설을 바로 받아볼 수 있습니다.",
     languageLabel: "출력 언어",
     languageHelp: "언어를 바꾸면 화면이 바로 전환되고, 기존 결과도 새 언어로 다시 생성됩니다.",
     emailLabel: "사용자 이메일",
@@ -239,8 +235,7 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     },
   },
   ja: {
-    assistantLabel: "AI Assistant",
-    assistantTagline: "あなたのLLMアシスタント",
+    heroLead: "論文、コード、専門テキストを入れると、構造化された説明をすぐ返します。",
     languageLabel: "出力言語",
     languageHelp: "切り替えると画面がすぐ更新され、既存の結果も新しい言語で再生成されます。",
     emailLabel: "ユーザーEmail",
@@ -454,50 +449,55 @@ export function ExplainerWorkspace() {
           </div>
         </Card>
 
-        <Card className="border-neutral-800 bg-neutral-900/95">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="max-w-3xl">
-              <h1 className="mt-3 text-3xl font-semibold text-white lg:text-4xl">
+        <Card className="border-neutral-800 bg-neutral-900/95 px-4 py-4 lg:px-5 lg:py-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-3xl space-y-2">
+              <h1 className="text-3xl font-semibold leading-tight text-white lg:text-[38px]">
                 Navia-X (SBP): 把复杂内容讲清楚
               </h1>
+              <p className="max-w-2xl text-sm leading-5 text-neutral-400 lg:text-[14px]">
+                {copy.heroLead}
+              </p>
             </div>
 
-            <div className="self-start rounded-[28px] border border-cyan-400/18 bg-[linear-gradient(145deg,rgba(18,24,34,0.96),rgba(16,16,16,0.92))] px-5 py-4 shadow-[0_22px_50px_rgba(0,0,0,0.32)] lg:min-w-[360px]">
-              <div className="flex items-start gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,rgba(225,255,255,0.92),rgba(103,232,249,0.9))] text-neutral-950 shadow-[0_14px_30px_rgba(8,145,178,0.28)]">
-                  <Download className="h-5 w-5" />
+            <div className="rounded-[22px] border border-cyan-400/18 bg-[linear-gradient(145deg,rgba(18,24,34,0.96),rgba(16,16,16,0.92))] px-4 py-3 shadow-[0_18px_40px_rgba(0,0,0,0.24)] lg:min-w-[440px]">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[15px] bg-[linear-gradient(135deg,rgba(225,255,255,0.92),rgba(103,232,249,0.9))] text-neutral-950 shadow-[0_10px_22px_rgba(8,145,178,0.2)]">
+                    <Download className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-cyan-200/72">
+                      {copy.downloads.label}
+                    </p>
+                    <p className="mt-1 text-[15px] font-semibold text-white">
+                      {copy.downloads.title}
+                    </p>
+                    <p className="mt-1 text-[13px] leading-5 text-neutral-300">
+                      {copy.downloads.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-200/72">
-                    {copy.downloads.label}
-                  </p>
-                  <p className="mt-1 text-base font-semibold text-white">
-                    {copy.downloads.title}
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-neutral-300">
-                    {copy.downloads.description}
-                  </p>
+
+                <div className="grid gap-2 sm:grid-cols-2 lg:min-w-[246px]">
+                  <a
+                    href={DESKTOP_DOWNLOADS.apple}
+                    download
+                    className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/95 px-4 py-2.5 text-sm font-semibold text-neutral-950 shadow-[0_10px_24px_rgba(255,255,255,0.14)] transition duration-200 hover:bg-white"
+                  >
+                    {copy.downloads.apple}
+                  </a>
+                  <a
+                    href={DESKTOP_DOWNLOADS.windows}
+                    download
+                    className="inline-flex items-center justify-center rounded-full border border-cyan-300/24 bg-cyan-400/12 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition duration-200 hover:border-cyan-200/40 hover:bg-cyan-300/18"
+                  >
+                    {copy.downloads.windows}
+                  </a>
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <a
-                  href={DESKTOP_DOWNLOADS.apple}
-                  download
-                  className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/95 px-4 py-3 text-sm font-semibold text-neutral-950 shadow-[0_12px_30px_rgba(255,255,255,0.14)] transition duration-200 hover:bg-white"
-                >
-                  {copy.downloads.apple}
-                </a>
-                <a
-                  href={DESKTOP_DOWNLOADS.windows}
-                  download
-                  className="inline-flex items-center justify-center rounded-full border border-cyan-300/24 bg-cyan-400/12 px-4 py-3 text-sm font-semibold text-cyan-100 transition duration-200 hover:border-cyan-200/40 hover:bg-cyan-300/18"
-                >
-                  {copy.downloads.windows}
-                </a>
-              </div>
-
-              <p className="mt-3 text-xs leading-6 text-neutral-500">
+              <p className="mt-2 text-[11px] leading-4 text-neutral-500 lg:pl-[52px]">
                 {copy.downloads.hint}
               </p>
             </div>
