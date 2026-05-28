@@ -3,12 +3,12 @@
 import { useRef, useState } from "react";
 import {
   Copy,
+  Download,
   Globe2,
   Languages,
   LoaderCircle,
   Mail,
   RotateCcw,
-  Sparkles,
 } from "lucide-react";
 import { explainText } from "@/lib/api";
 import { ExplainMode, ExplainResult } from "@/lib/types";
@@ -35,6 +35,14 @@ type WorkspaceCopy = {
   resultWaitingBody: string;
   resultLoadingBody: string;
   outputLabel: string;
+  downloads: {
+    label: string;
+    title: string;
+    description: string;
+    apple: string;
+    windows: string;
+    hint: string;
+  };
   buttons: {
     explain: string;
     explaining: string;
@@ -68,6 +76,10 @@ const defaultText =
   "Self-attention enables each token to attend to every other token in parallel, which makes Transformers more scalable than recurrent architectures when modeling long-range dependencies.";
 const PUBLIC_PREVIEW_NOTICE =
   "Current public preview exposes only the lightweight interaction layer of Navia-SBP. Core semantic breakpoint processing, interaction abstraction, and enterprise optimization modules operate within authorized deployment environments.";
+const DESKTOP_DOWNLOADS = {
+  apple: "/downloads/navia-x-sbp-macos-apple-silicon.zip",
+  windows: "/downloads/navia-x-sbp-windows-installer.exe",
+} as const;
 
 const languageOptions = [
   { value: "zh-CN", label: "简体中文", hint: "立即切换中文界面与中文解析结果" },
@@ -93,6 +105,14 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     resultWaitingBody: "选择语言后，点击“开始解析”，系统会直接返回结构化解释结果。",
     resultLoadingBody: "正在根据当前语言重新生成结构化解释结果。",
     outputLabel: "当前语言",
+    downloads: {
+      label: "Desktop Download",
+      title: "下载桌面端",
+      description: "本地安装后即可直接使用。",
+      apple: "Apple / macOS",
+      windows: "Windows",
+      hint: "当前提供 macOS Apple Silicon 与 Windows 安装包。",
+    },
     buttons: {
       explain: "开始解析",
       explaining: "解析中",
@@ -134,6 +154,14 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     resultWaitingBody: 'Choose a language and click "Explain" to get a structured response.',
     resultLoadingBody: "Generating a fresh explanation in the currently selected language.",
     outputLabel: "Selected language",
+    downloads: {
+      label: "Desktop Download",
+      title: "Download Desktop",
+      description: "Install locally and start using it right away.",
+      apple: "Apple / macOS",
+      windows: "Windows",
+      hint: "Available now for macOS Apple Silicon and Windows.",
+    },
     buttons: {
       explain: "Explain",
       explaining: "Explaining",
@@ -176,6 +204,14 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     resultWaitingBody: "언어를 선택한 뒤 “해설 시작”을 누르면 구조화된 결과가 바로 반환됩니다.",
     resultLoadingBody: "현재 선택한 언어에 맞춰 해설 결과를 다시 생성하고 있습니다.",
     outputLabel: "선택 언어",
+    downloads: {
+      label: "Desktop Download",
+      title: "데스크톱 다운로드",
+      description: "로컬에 설치한 뒤 바로 사용할 수 있습니다.",
+      apple: "Apple / macOS",
+      windows: "Windows",
+      hint: "현재 macOS Apple Silicon 및 Windows 설치 패키지를 제공합니다.",
+    },
     buttons: {
       explain: "해설 시작",
       explaining: "해설 중",
@@ -218,6 +254,14 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     resultWaitingBody: "言語を選択して「解析開始」を押すと、構造化された結果が返ります。",
     resultLoadingBody: "現在選択している言語に合わせて結果を再生成しています。",
     outputLabel: "選択言語",
+    downloads: {
+      label: "Desktop Download",
+      title: "デスクトップ版をダウンロード",
+      description: "ローカルにインストールしてすぐ使えます。",
+      apple: "Apple / macOS",
+      windows: "Windows",
+      hint: "現在は macOS Apple Silicon と Windows のインストーラを提供しています。",
+    },
     buttons: {
       explain: "解析開始",
       explaining: "解析中",
@@ -418,20 +462,44 @@ export function ExplainerWorkspace() {
               </h1>
             </div>
 
-            <div className="self-start rounded-[28px] border border-neutral-700 bg-neutral-800/90 px-4 py-3 shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,#d4d4d8,#737373)] text-neutral-950 shadow-[0_14px_30px_rgba(90,90,90,0.3)]">
-                  <Sparkles className="h-5 w-5" />
+            <div className="self-start rounded-[28px] border border-cyan-400/18 bg-[linear-gradient(145deg,rgba(18,24,34,0.96),rgba(16,16,16,0.92))] px-5 py-4 shadow-[0_22px_50px_rgba(0,0,0,0.32)] lg:min-w-[360px]">
+              <div className="flex items-start gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,rgba(225,255,255,0.92),rgba(103,232,249,0.9))] text-neutral-950 shadow-[0_14px_30px_rgba(8,145,178,0.28)]">
+                  <Download className="h-5 w-5" />
                 </div>
-                <div className="text-right">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-neutral-500">
-                    {copy.assistantLabel}
+                <div className="flex-1">
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-200/72">
+                    {copy.downloads.label}
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-white">
-                    {copy.assistantTagline}
+                  <p className="mt-1 text-base font-semibold text-white">
+                    {copy.downloads.title}
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-neutral-300">
+                    {copy.downloads.description}
                   </p>
                 </div>
               </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <a
+                  href={DESKTOP_DOWNLOADS.apple}
+                  download
+                  className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/95 px-4 py-3 text-sm font-semibold text-neutral-950 shadow-[0_12px_30px_rgba(255,255,255,0.14)] transition duration-200 hover:bg-white"
+                >
+                  {copy.downloads.apple}
+                </a>
+                <a
+                  href={DESKTOP_DOWNLOADS.windows}
+                  download
+                  className="inline-flex items-center justify-center rounded-full border border-cyan-300/24 bg-cyan-400/12 px-4 py-3 text-sm font-semibold text-cyan-100 transition duration-200 hover:border-cyan-200/40 hover:bg-cyan-300/18"
+                >
+                  {copy.downloads.windows}
+                </a>
+              </div>
+
+              <p className="mt-3 text-xs leading-6 text-neutral-500">
+                {copy.downloads.hint}
+              </p>
             </div>
           </div>
         </Card>
