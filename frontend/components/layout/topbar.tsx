@@ -5,7 +5,7 @@ export function Topbar() {
     <header className="flex flex-col gap-4 rounded-[30px] border border-white/10 bg-slate-950/68 px-6 py-5 shadow-[0_24px_90px_rgba(0,0,0,0.36)] backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between">
       <div>
         <p className="text-xs uppercase tracking-[0.32em] text-slate-500">
-          Navia-X Control Center
+          Navia-X (SBP) Control Center
         </p>
         <h2 className="mt-2 text-2xl font-semibold text-white">
           浏览器解释器与后台管理一体化控制台

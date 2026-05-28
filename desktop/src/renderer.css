@@ -164,7 +164,7 @@ button {
 .bubble-wordmark {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   font-size: 1.36rem;
   line-height: 1;
   letter-spacing: 0.02em;
@@ -179,6 +179,15 @@ button {
 .bubble-wordmark-accent,
 .brand-accent {
   color: var(--accent);
+}
+
+.bubble-wordmark-suffix,
+.brand-suffix {
+  color: var(--text-muted);
+  font-size: 0.58em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .panel-view,
@@ -278,7 +287,8 @@ button {
 .brand-copy h1 {
   margin: 0;
   display: inline-flex;
-  gap: 2px;
+  align-items: baseline;
+  gap: 4px;
   font-size: 1.52rem;
   line-height: 1;
   font-weight: 600;

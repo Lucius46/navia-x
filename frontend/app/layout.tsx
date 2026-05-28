@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Navia-X User Explainer",
+  title: "Navia-X (SBP) User Explainer",
   description: "User-facing web explainer with parsing modes and language selection."
 };
 

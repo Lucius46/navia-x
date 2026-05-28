@@ -66,6 +66,8 @@ const DEFAULT_USER_EMAIL = "web@navia-x.ai";
 const MAX_INPUT_LENGTH = 3000;
 const defaultText =
   "Self-attention enables each token to attend to every other token in parallel, which makes Transformers more scalable than recurrent architectures when modeling long-range dependencies.";
+const PUBLIC_PREVIEW_NOTICE =
+  "Current public preview exposes only the lightweight interaction layer of Navia-SBP. Core semantic breakpoint processing, interaction abstraction, and enterprise optimization modules operate within authorized deployment environments.";
 
 const languageOptions = [
   { value: "zh-CN", label: "简体中文", hint: "立即切换中文界面与中文解析结果" },
@@ -388,11 +390,31 @@ export function ExplainerWorkspace() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.05),transparent_24%),linear-gradient(180deg,#121212_0%,#171717_48%,#0d0d0d_100%)] px-4 py-6 text-neutral-100 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
+        <Card className="overflow-hidden border-neutral-800 bg-[linear-gradient(135deg,rgba(9,14,24,0.98),rgba(20,20,20,0.94))]">
+          <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-center">
+            <div className="rounded-[24px] border border-cyan-400/15 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_48%),rgba(255,255,255,0.03)] px-5 py-4 shadow-[0_18px_40px_rgba(8,145,178,0.16)]">
+              <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-200/72">
+                Public Preview
+              </p>
+              <h2 className="mt-2 text-lg font-semibold text-white">
+                Navia-SBP Deployment Notice
+              </h2>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.03] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <div className="absolute inset-y-5 left-0 w-px bg-gradient-to-b from-transparent via-cyan-300/70 to-transparent" />
+              <p className="pl-5 font-mono text-sm leading-7 text-slate-200 lg:text-[15px]">
+                {PUBLIC_PREVIEW_NOTICE}
+              </p>
+            </div>
+          </div>
+        </Card>
+
         <Card className="border-neutral-800 bg-neutral-900/95">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-3xl">
               <h1 className="mt-3 text-3xl font-semibold text-white lg:text-4xl">
-                navia-x：把复杂内容讲清楚
+                Navia-X (SBP): 把复杂内容讲清楚
               </h1>
             </div>
 

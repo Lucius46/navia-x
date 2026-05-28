@@ -42,6 +42,7 @@ const settingsClipboardButton = document.querySelector("#settingsClipboardButton
 const settingsCopyResultButton = document.querySelector("#settingsCopyResultButton");
 const saveSettingsButton = document.querySelector("#saveSettingsButton");
 
+const DESKTOP_BRAND = "Navia-X (SBP)";
 const INPUT_LIMIT = 3000;
 const DEFAULT_USER_EMAIL = "desktop@navia-x.ai";
 
@@ -268,7 +269,7 @@ const translations = {
       explain: "开始解释",
       api: "接口",
       minimize: "最小化",
-      open: "打开 Navia-X"
+      open: `打开 ${DESKTOP_BRAND}`
     },
     placeholder:
       "把你不理解的词语、句子、代码或论文段落放到这里。按 Enter 直接解释，Shift+Enter 换行。",
@@ -339,7 +340,7 @@ const translations = {
     },
     home: {
       bubbleTitle: "悬浮球",
-      bubbleBody: "悬浮球固定尺寸，只保留 logo 和 Navia-X 字标。",
+      bubbleBody: `悬浮球固定尺寸，只保留 logo 和 ${DESKTOP_BRAND} 字标。`,
       modeTitle: "当前模式",
       modeBody: (label, subtitle) => `${label}：${subtitle}`,
       languageTitle: "输出语言",
@@ -408,7 +409,7 @@ const translations = {
       explain: "Explain",
       api: "API",
       minimize: "Minimize",
-      open: "Open Navia-X"
+      open: `Open ${DESKTOP_BRAND}`
     },
     placeholder:
       "Paste the word, sentence, code, or paper paragraph you want explained. Press Enter to explain and Shift+Enter for a new line.",
@@ -480,7 +481,7 @@ const translations = {
     },
     home: {
       bubbleTitle: "Floating Ball",
-      bubbleBody: "The floating ball keeps a fixed size and shows only the logo and Navia-X wordmark.",
+      bubbleBody: `The floating ball keeps a fixed size and shows only the logo and ${DESKTOP_BRAND} wordmark.`,
       modeTitle: "Current Mode",
       modeBody: (label, subtitle) => `${label}: ${subtitle}`,
       languageTitle: "Output Language",
@@ -549,7 +550,7 @@ const translations = {
       explain: "설명 시작",
       api: "API",
       minimize: "최소화",
-      open: "Navia-X 열기"
+      open: `${DESKTOP_BRAND} 열기`
     },
     placeholder:
       "이해가 어려운 단어, 문장, 코드, 논문 문단을 여기에 넣으세요. Enter로 설명하고 Shift+Enter로 줄바꿈합니다.",
@@ -621,7 +622,7 @@ const translations = {
     },
     home: {
       bubbleTitle: "플로팅 볼",
-      bubbleBody: "플로팅 볼은 고정 크기이며 logo와 Navia-X만 표시합니다.",
+      bubbleBody: `플로팅 볼은 고정 크기이며 logo와 ${DESKTOP_BRAND}만 표시합니다.`,
       modeTitle: "현재 모드",
       modeBody: (label, subtitle) => `${label}: ${subtitle}`,
       languageTitle: "출력 언어",
@@ -690,7 +691,7 @@ const translations = {
       explain: "説明開始",
       api: "API",
       minimize: "最小化",
-      open: "Navia-X を開く"
+      open: `${DESKTOP_BRAND} を開く`
     },
     placeholder:
       "わからない単語、文章、コード、論文の段落をここに入れてください。Enter で説明、Shift+Enter で改行します。",
@@ -762,7 +763,7 @@ const translations = {
     },
     home: {
       bubbleTitle: "フローティングボール",
-      bubbleBody: "フローティングボールは固定サイズで、logo と Navia-X だけを表示します。",
+      bubbleBody: `フローティングボールは固定サイズで、logo と ${DESKTOP_BRAND} だけを表示します。`,
       modeTitle: "現在のモード",
       modeBody: (label, subtitle) => `${label}: ${subtitle}`,
       languageTitle: "出力言語",
@@ -1107,7 +1108,7 @@ async function maybeImportClipboardOnOpen() {
   return true;
 }
 
-async function openPanelFromBubble(triggerSource = "Navia-X") {
+async function openPanelFromBubble(triggerSource = DESKTOP_BRAND) {
   const ui = getUi();
   setWindowMode("panel");
   await window.naviaDesktop.setWindowMode("panel");
@@ -1619,13 +1620,13 @@ async function handleLanguageChange(languageKey) {
 }
 
 bubbleExpandButton.addEventListener("click", async () => {
-  await openPanelFromBubble("Navia-X");
+  await openPanelFromBubble(DESKTOP_BRAND);
 });
 
 bubbleExpandButton.addEventListener("keydown", async (event) => {
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
-    await openPanelFromBubble("Navia-X");
+    await openPanelFromBubble(DESKTOP_BRAND);
   }
 });
 
@@ -1634,7 +1635,7 @@ bubbleShell.addEventListener("dblclick", async (event) => {
     return;
   }
 
-  await openPanelFromBubble("Navia-X");
+  await openPanelFromBubble(DESKTOP_BRAND);
 });
 
 minimizeButton.addEventListener("click", async () => {

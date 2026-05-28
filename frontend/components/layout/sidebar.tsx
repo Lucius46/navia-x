@@ -36,7 +36,7 @@ export function Sidebar() {
               Browser Control
             </p>
             <h1 className="text-lg font-semibold text-white">
-              Navia-X Explainer
+              Navia-X (SBP) Explainer
             </h1>
           </div>
         </div>

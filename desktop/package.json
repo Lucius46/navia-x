@@ -2,7 +2,7 @@
   "name": "navia-x-desktop",
   "version": "0.1.0",
   "private": true,
-  "author": "Navia-X Team",
+  "author": "Navia-X (SBP) Team",
   "description": "Windows-first floating desktop explainer for LLM text understanding.",
   "main": "src/main.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "build": {
     "appId": "ai.naviax.explainer",
-    "productName": "Navia-X Explainer",
+    "productName": "Navia-X (SBP) Explainer",
     "directories": {
       "buildResources": "assets"
     },

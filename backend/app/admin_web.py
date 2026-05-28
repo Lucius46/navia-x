@@ -300,7 +300,7 @@ def render_login_page(error_message: str | None, settings: Settings) -> str:
       </section>
     </div>
     """
-    return render_shell("Navia-X Admin Login", body)
+    return render_shell("Navia-X (SBP) Admin Login", body)
 
 
 def metric_card(label: str, value: str, note: str) -> str:
@@ -396,7 +396,7 @@ def render_dashboard_page(
       <section class="card hero">
         <div>
           <p class="eyebrow">Admin Web</p>
-          <h1>Navia-X 后端管理模式</h1>
+          <h1>Navia-X (SBP) 后端管理模式</h1>
           <p class="copy">
             管理端已经从用户前端拆出，只保留在后端网页里。这里可以集中查看系统健康、模型状态、测试用户和请求日志，
             用户侧网页与桌面端只负责解析体验。
@@ -521,7 +521,7 @@ def render_dashboard_page(
       </div>
     </div>
     """
-    return render_shell("Navia-X Admin", body)
+    return render_shell("Navia-X (SBP) Admin", body)
 
 
 @router.get("/admin/login", response_class=HTMLResponse, response_model=None)

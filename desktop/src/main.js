@@ -12,6 +12,7 @@ const {
 const fs = require("node:fs");
 const path = require("node:path");
 
+const DESKTOP_BRAND = "Navia-X (SBP)";
 const BUBBLE_BOUNDS = { width: 204, height: 66 };
 const PANEL_BOUNDS = { width: 430, height: 820 };
 const PANEL_MIN_BOUNDS = { width: 360, height: 560 };
@@ -393,7 +394,7 @@ function createTray() {
     }
 
     tray = new Tray(image);
-    tray.setToolTip("Navia-X Explainer");
+    tray.setToolTip(`${DESKTOP_BRAND} Explainer`);
     tray.on("click", () => {
       showPanel();
     });
