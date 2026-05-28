@@ -76,8 +76,14 @@ const defaultText =
 const PUBLIC_PREVIEW_NOTICE =
   "Current public preview exposes only the lightweight interaction layer of Navia-SBP. Core semantic breakpoint processing, interaction abstraction, and enterprise optimization modules operate within authorized deployment environments.";
 const DESKTOP_DOWNLOADS = {
-  apple: "/downloads/navia-x-sbp-macos-apple-silicon.zip",
-  windows: "/downloads/navia-x-sbp-windows-installer.exe",
+  apple: {
+    href: "/downloads/navia-x-sbp-macos-apple-silicon.zip",
+    fileName: "Navia-X-SBP-macOS-Apple-Silicon-0.1.0.zip",
+  },
+  windows: {
+    href: "/downloads/navia-x-sbp-windows-installer.exe",
+    fileName: "Navia-X-SBP-Setup-0.1.0.exe",
+  },
 } as const;
 
 const languageOptions = [
@@ -481,15 +487,15 @@ export function ExplainerWorkspace() {
 
                 <div className="grid gap-2 sm:grid-cols-2 lg:min-w-[246px]">
                   <a
-                    href={DESKTOP_DOWNLOADS.apple}
-                    download
+                    href={DESKTOP_DOWNLOADS.apple.href}
+                    download={DESKTOP_DOWNLOADS.apple.fileName}
                     className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/95 px-4 py-2.5 text-sm font-semibold text-neutral-950 shadow-[0_10px_24px_rgba(255,255,255,0.14)] transition duration-200 hover:bg-white"
                   >
                     {copy.downloads.apple}
                   </a>
                   <a
-                    href={DESKTOP_DOWNLOADS.windows}
-                    download
+                    href={DESKTOP_DOWNLOADS.windows.href}
+                    download={DESKTOP_DOWNLOADS.windows.fileName}
                     className="inline-flex items-center justify-center rounded-full border border-cyan-300/24 bg-cyan-400/12 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition duration-200 hover:border-cyan-200/40 hover:bg-cyan-300/18"
                   >
                     {copy.downloads.windows}
