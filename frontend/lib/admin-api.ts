@@ -30,6 +30,14 @@ function normalizeApiError(detail: unknown, fallback: string) {
   return fallback;
 }
 
+function toIsoDateTime(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  return new Date(value).toISOString();
+}
+
 async function adminRequest<T>(
   path: string,
   init: RequestInit = {},
@@ -152,7 +160,7 @@ export async function createLicenseCode(payload: CreateLicensePayload) {
         duration_days: payload.durationDays ?? null,
         max_activations: payload.maxActivations ?? 1,
         usage_limit_per_day: payload.usageLimitPerDay ?? 50,
-        expires_at: payload.expiresAt ?? null,
+        expires_at: toIsoDateTime(payload.expiresAt),
       }),
     },
     "Unable to create a license code."
@@ -228,7 +236,7 @@ export async function updateAdminUserAccess(
         access_expires_at:
           payload.accessExpiresAt === undefined
             ? undefined
-            : payload.accessExpiresAt,
+            : toIsoDateTime(payload.accessExpiresAt),
         extend_days: payload.extendDays,
         daily_usage_limit: payload.dailyUsageLimit,
       }),
