@@ -3,39 +3,42 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  FileUp,
-  History,
-  LayoutDashboard,
+  CreditCard,
+  KeyRound,
   Settings,
   Shield,
   Sparkles
 } from "lucide-react";
+import { isAdminUser, useAuthSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
-
-const items = [
-  { href: "/dashboard", label: "主页", icon: LayoutDashboard },
-  { href: "/explain", label: "解释模式", icon: Sparkles },
-  { href: "/history", label: "历史记录", icon: History },
-  { href: "/pdf", label: "PDF 上传", icon: FileUp },
-  { href: "/settings", label: "设置", icon: Settings },
-  { href: "/admin", label: "管理后台", icon: Shield }
-];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user } = useAuthSession();
+  const items = [
+    { href: "/", label: "Explainer", icon: Sparkles },
+    { href: "/activate", label: "Activate", icon: KeyRound },
+    { href: "/settings/billing", label: "Billing", icon: CreditCard },
+    ...(isAdminUser(user)
+      ? [
+          { href: "/admin/licenses", label: "Admin Licenses", icon: Shield },
+          { href: "/admin/users", label: "Admin Users", icon: Settings }
+        ]
+      : [])
+  ];
 
   return (
-    <aside className="sticky top-4 flex h-[calc(100vh-2rem)] w-full max-w-[280px] flex-col justify-between rounded-[34px] border border-white/10 bg-slate-950/70 p-5 shadow-[0_28px_100px_rgba(0,0,0,0.35)] backdrop-blur-2xl">
+    <aside className="sticky top-4 flex h-[calc(100vh-2rem)] w-full max-w-[280px] flex-col justify-between rounded-[34px] border border-line bg-white/92 p-5 shadow-panel backdrop-blur-2xl">
       <div>
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/20 bg-[radial-gradient(circle_at_30%_20%,rgba(96,165,250,0.55),rgba(29,78,216,0.15)_60%,rgba(15,23,42,0.9))] text-lg font-bold text-white shadow-[0_12px_40px_rgba(29,78,216,0.28)]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-200 bg-[radial-gradient(circle_at_30%_20%,rgba(147,197,253,0.82),rgba(59,130,246,0.16)_60%,rgba(255,255,255,0.96))] text-lg font-bold text-blue-700 shadow-float">
             NX
           </div>
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-slate-500">
-              Browser Control
+            <p className="text-sm uppercase tracking-[0.28em] text-slate-400">
+              Access Control
             </p>
-            <h1 className="text-lg font-semibold text-white">
+            <h1 className="text-lg font-semibold text-slate-900">
               Navia-X (SBP) Explainer
             </h1>
           </div>
@@ -54,8 +57,8 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition",
                   active
-                    ? "bg-gradient-to-r from-cyan-500/25 via-blue-500/25 to-indigo-500/25 text-white shadow-[0_14px_40px_rgba(59,130,246,0.2)]"
-                    : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
+                    ? "bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-float"
+                    : "text-slate-500 hover:bg-blue-50 hover:text-slate-900"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -66,15 +69,15 @@ export function Sidebar() {
         </nav>
       </div>
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.04] p-4">
-        <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
-          Extension Flow
+      <div className="rounded-[24px] border border-blue-100 bg-blue-50/80 p-4">
+        <p className="text-xs uppercase tracking-[0.24em] text-blue-500">
+          License Flow
         </p>
-        <p className="mt-2 text-sm font-semibold text-white">
-          选词 → 确认 → 后端解释 → 后台留痕
+        <p className="mt-2 text-sm font-semibold text-slate-900">
+          Sign in → Activate → Explain → Track usage
         </p>
-        <p className="mt-2 text-sm text-slate-400">
-          当前版本默认预留模型路由扩展，并将浏览器扩展和后台请求统一记录。
+        <p className="mt-2 text-sm text-slate-600">
+          License enforcement now happens on the backend before protected LLM requests are processed.
         </p>
       </div>
     </aside>

@@ -8,6 +8,17 @@ export type ExplainMode =
   | "science"
   | "literature";
 
+export type LicensePlan =
+  | "trial"
+  | "student"
+  | "pro"
+  | "enterprise"
+  | "lifetime";
+
+export type UserPlan = "free" | LicensePlan;
+
+export type AccessStatus = "inactive" | "active" | "disabled" | "expired";
+
 export interface KeywordItem {
   term: string;
   definition: string;
@@ -26,7 +37,6 @@ export interface ExplainResult {
 export interface ExplainRequestPayload {
   text: string;
   mode: ExplainMode;
-  userEmail: string;
   outputLanguage?: "zh-CN" | "en" | "ko" | "ja";
 }
 
@@ -55,13 +65,70 @@ export interface UsageSummary {
   series: UsagePoint[];
 }
 
+export interface AuthUser {
+  id: string;
+  email: string;
+  role: "user" | "admin";
+  plan: UserPlan;
+  accessStatus: AccessStatus;
+  accessExpiresAt: string | null;
+  dailyUsageLimit: number;
+}
+
+export interface AuthSession {
+  accessToken: string;
+  tokenType: "bearer";
+  user: AuthUser;
+}
+
+export interface LicenseStatus {
+  plan: UserPlan;
+  accessStatus: AccessStatus;
+  accessExpiresAt: string | null;
+  dailyUsageCount: number;
+  dailyUsageLimit: number;
+}
+
+export interface LicenseCodeRecord {
+  id: string;
+  code: string;
+  plan: LicensePlan;
+  status: "active" | "disabled" | "expired";
+  maxActivations: number;
+  usedCount: number;
+  durationDays: number | null;
+  usageLimitPerDay: number;
+  expiresAt: string | null;
+  createdBy: string | null;
+  createdAt: string;
+}
+
+export interface CreateLicensePayload {
+  plan: LicensePlan;
+  durationDays?: number | null;
+  maxActivations?: number;
+  usageLimitPerDay?: number;
+  expiresAt?: string | null;
+}
+
 export interface AdminUser {
   id: string;
   email: string;
-  role: string;
-  status: string;
-  requestsToday: number;
-  createdAt: string;
+  role: "user" | "admin";
+  plan: UserPlan;
+  accessStatus: AccessStatus;
+  accessExpiresAt: string | null;
+  dailyUsageCount: number;
+  dailyUsageLimit: number;
+  createdAt: string | null;
+}
+
+export interface AdminUserAccessPayload {
+  plan?: UserPlan;
+  accessStatus?: AccessStatus;
+  accessExpiresAt?: string | null;
+  extendDays?: number;
+  dailyUsageLimit?: number;
 }
 
 export interface RequestLog {

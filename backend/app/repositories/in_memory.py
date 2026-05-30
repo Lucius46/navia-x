@@ -46,25 +46,34 @@ class InMemoryRepository:
             AdminUser(
                 id="usr_001",
                 email="beta01@llmexplainer.ai",
-                role="Tester",
-                status="Active",
-                requests_today=9,
+                role="user",
+                plan="trial",
+                access_status="active",
+                access_expires_at=None,
+                daily_usage_count=9,
+                daily_usage_limit=20,
                 created_at=datetime.now(UTC),
             ),
             AdminUser(
                 id="usr_002",
                 email="beta02@llmexplainer.ai",
-                role="Tester",
-                status="Active",
-                requests_today=17,
+                role="user",
+                plan="student",
+                access_status="active",
+                access_expires_at=None,
+                daily_usage_count=17,
+                daily_usage_limit=25,
                 created_at=datetime.now(UTC),
             ),
             AdminUser(
                 id="usr_003",
                 email="ops@llmexplainer.ai",
-                role="Admin",
-                status="Invited",
-                requests_today=1,
+                role="admin",
+                plan="enterprise",
+                access_status="active",
+                access_expires_at=None,
+                daily_usage_count=1,
+                daily_usage_limit=999,
                 created_at=datetime.now(UTC),
             ),
         ]
@@ -176,4 +185,3 @@ class InMemoryRepository:
 
     def list_logs(self) -> list[RequestLog]:
         return self.logs
-

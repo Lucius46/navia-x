@@ -74,25 +74,34 @@ export const adminUsers: AdminUser[] = [
   {
     id: "usr_001",
     email: "beta01@llmexplainer.ai",
-    role: "Tester",
-    status: "Active",
-    requestsToday: 9,
+    role: "user",
+    plan: "trial",
+    accessStatus: "active",
+    accessExpiresAt: "2026-06-30T03:00:00.000Z",
+    dailyUsageCount: 9,
+    dailyUsageLimit: 20,
     createdAt: "2026-05-01T03:00:00.000Z"
   },
   {
     id: "usr_002",
     email: "beta02@llmexplainer.ai",
-    role: "Tester",
-    status: "Active",
-    requestsToday: 17,
+    role: "user",
+    plan: "student",
+    accessStatus: "active",
+    accessExpiresAt: "2026-06-15T05:30:00.000Z",
+    dailyUsageCount: 17,
+    dailyUsageLimit: 25,
     createdAt: "2026-05-02T05:30:00.000Z"
   },
   {
     id: "usr_003",
     email: "ops@llmexplainer.ai",
-    role: "Admin",
-    status: "Invited",
-    requestsToday: 1,
+    role: "admin",
+    plan: "enterprise",
+    accessStatus: "active",
+    accessExpiresAt: null,
+    dailyUsageCount: 1,
+    dailyUsageLimit: 999,
     createdAt: "2026-05-05T11:12:00.000Z"
   }
 ];
@@ -150,4 +159,3 @@ export const modelStatuses: ModelStatus[] = [
     note: "路由位已预留，待补供应商凭证和客户端。"
   }
 ];
-

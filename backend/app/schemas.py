@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 ExplainMode = Literal[
@@ -14,12 +16,14 @@ ExplainMode = Literal[
     "science",
     "literature",
 ]
+LicensePlan = Literal["trial", "student", "pro", "enterprise", "lifetime"]
+UserPlan = Literal["free", "trial", "student", "pro", "enterprise", "lifetime"]
+AccessStatus = Literal["inactive", "active", "disabled", "expired"]
 
 
 class ExplainRequest(BaseModel):
     input_text: str = Field(..., min_length=1, max_length=3000)
     mode: ExplainMode = "simple"
-    user_email: EmailStr
     output_language: Literal["zh-CN", "en", "ko", "ja"] = "zh-CN"
     output_language_label: str | None = None
 
@@ -74,10 +78,13 @@ class UsageSummary(BaseModel):
 class AdminUser(BaseModel):
     id: str
     email: EmailStr
-    role: str
-    status: str
-    requests_today: int
-    created_at: datetime
+    role: Literal["user", "admin"]
+    plan: UserPlan
+    access_status: AccessStatus
+    access_expires_at: datetime | None = None
+    daily_usage_count: int = 0
+    daily_usage_limit: int = 0
+    created_at: datetime | None = None
 
 
 class RequestLog(BaseModel):
@@ -101,3 +108,71 @@ class ModelStatus(BaseModel):
 class HealthResponse(BaseModel):
     status: str
     service: str
+
+
+class AuthLoginRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=128)
+
+
+class AuthUserResponse(BaseModel):
+    id: str
+    email: EmailStr
+    role: Literal["user", "admin"]
+    plan: UserPlan
+    access_status: AccessStatus
+    access_expires_at: datetime | None = None
+    daily_usage_limit: int
+
+
+class AuthSessionResponse(BaseModel):
+    access_token: str
+    token_type: Literal["bearer"] = "bearer"
+    user: AuthUserResponse
+
+
+class LicenseActivateRequest(BaseModel):
+    code: str = Field(..., min_length=8, max_length=64)
+
+    @field_validator("code")
+    @classmethod
+    def normalize_code(cls, value: str) -> str:
+        return value.strip().upper()
+
+
+class LicenseStatusResponse(BaseModel):
+    plan: UserPlan
+    access_status: AccessStatus
+    access_expires_at: datetime | None = None
+    daily_usage_count: int
+    daily_usage_limit: int
+
+
+class LicenseCodeResponse(BaseModel):
+    id: str
+    code: str
+    plan: LicensePlan
+    status: Literal["active", "disabled", "expired"]
+    max_activations: int
+    used_count: int
+    duration_days: int | None = None
+    usage_limit_per_day: int
+    expires_at: datetime | None = None
+    created_by: str | None = None
+    created_at: datetime
+
+
+class AdminLicenseCreateRequest(BaseModel):
+    plan: LicensePlan
+    duration_days: int | None = Field(default=None, ge=1, le=3650)
+    max_activations: int = Field(default=1, ge=1, le=100000)
+    usage_limit_per_day: int = Field(default=50, ge=0, le=100000)
+    expires_at: datetime | None = None
+
+
+class AdminUserAccessUpdateRequest(BaseModel):
+    plan: UserPlan | None = None
+    access_status: AccessStatus | None = None
+    access_expires_at: datetime | None = None
+    extend_days: int | None = Field(default=None, ge=1, le=3650)
+    daily_usage_limit: int | None = Field(default=None, ge=0, le=100000)

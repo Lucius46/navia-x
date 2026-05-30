@@ -3,11 +3,14 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.admin_web import router as admin_web_router
+from app.api.admin.licenses import router as admin_licenses_router
 from app.api.admin.logs import router as admin_logs_router
 from app.api.admin.users import router as admin_users_router
+from app.api.auth import router as auth_router
 from app.api.explain import router as explain_router
 from app.api.health import router as health_router
 from app.api.history import router as history_router
+from app.api.license import router as license_router
 from app.api.usage import router as usage_router
 from app.config import get_settings
 
@@ -36,9 +39,12 @@ app.add_middleware(
 )
 
 app.include_router(health_router, prefix=settings.api_prefix)
+app.include_router(auth_router, prefix=settings.api_prefix)
+app.include_router(license_router, prefix=settings.api_prefix)
 app.include_router(explain_router, prefix=settings.api_prefix)
 app.include_router(history_router, prefix=settings.api_prefix)
 app.include_router(usage_router, prefix=settings.api_prefix)
+app.include_router(admin_licenses_router, prefix=settings.api_prefix)
 app.include_router(admin_users_router, prefix=settings.api_prefix)
 app.include_router(admin_logs_router, prefix=settings.api_prefix)
 app.include_router(admin_web_router)

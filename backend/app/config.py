@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     admin_name: str = "LLM Explainer Admin"
     admin_session_secret: str | None = None
     jwt_secret: str = "change_me_jwt_secret"
+    auth_token_ttl_hours: int = 12
 
     daily_request_limit: int = 20
     input_char_limit: int = 3000

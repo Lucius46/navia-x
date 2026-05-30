@@ -340,8 +340,8 @@ def render_dashboard_page(
         <tr>
           <td>{escape(item.email)}</td>
           <td>{escape(item.role)}</td>
-          <td>{escape(item.status)}</td>
-          <td>{item.requests_today}</td>
+          <td>{escape(item.access_status)}</td>
+          <td>{item.daily_usage_count}</td>
           <td>{escape(format_datetime(item.created_at))}</td>
         </tr>
         """

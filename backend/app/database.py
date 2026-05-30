@@ -1,6 +1,14 @@
-from dataclasses import dataclass
+from __future__ import annotations
 
-from app.config import Settings
+from contextlib import contextmanager
+from dataclasses import dataclass
+from functools import lru_cache
+from typing import Iterator
+
+import psycopg
+from psycopg.rows import dict_row
+
+from app.config import Settings, get_settings
 
 
 @dataclass
@@ -12,11 +20,11 @@ class SupabaseConfig:
 
     @property
     def is_configured(self) -> bool:
-        return bool(self.url and self.database_url)
+        return bool(self.url and self.anon_key and self.database_url)
 
 
 class DatabaseManager:
-    """Connection placeholder for Supabase/PostgreSQL integration."""
+    """Thin psycopg connection helper for the Supabase Postgres instance."""
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -32,3 +40,16 @@ class DatabaseManager:
     def is_configured(self) -> bool:
         return self.get_config().is_configured
 
+    @contextmanager
+    def connection(self) -> Iterator[psycopg.Connection]:
+        config = self.get_config()
+        if not config.database_url:
+            raise RuntimeError("DATABASE_URL is not configured.")
+
+        with psycopg.connect(config.database_url, row_factory=dict_row) as connection:
+            yield connection
+
+
+@lru_cache
+def get_database_manager() -> DatabaseManager:
+    return DatabaseManager(get_settings())

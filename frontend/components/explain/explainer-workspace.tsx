@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
 import {
   Copy,
@@ -11,11 +12,13 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { explainText } from "@/lib/api";
+import { useAuthSession } from "@/lib/auth";
 import { ExplainMode, ExplainResult } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { formatAccessStatus, formatPlanLabel } from "@/lib/utils";
 
 type LanguageKey = "zh-CN" | "en" | "ko" | "ja";
 
@@ -69,7 +72,6 @@ type WorkspaceCopy = {
 };
 
 const UNIFIED_EXPLAIN_MODE: ExplainMode = "professional";
-const DEFAULT_USER_EMAIL = "web@navia-x.ai";
 const MAX_INPUT_LENGTH = 3000;
 const defaultText =
   "Self-attention enables each token to attend to every other token in parallel, which makes Transformers more scalable than recurrent architectures when modeling long-range dependencies.";
@@ -98,8 +100,8 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     heroLead: "输入论文、代码或专业文本，立即得到结构化解释与重点拆解。",
     languageLabel: "输出语言",
     languageHelp: "切换后，界面立即更新；如果已有结果，系统会自动生成对应语言的新结果。",
-    emailLabel: "用户邮箱",
-    emailHelp: "用于同步你的解析记录与使用信息。",
+    emailLabel: "当前账户",
+    emailHelp: "显示当前登录账户与许可证状态。",
     inputEyebrow: "Input",
     inputTitle: "输入要解析的内容",
     inputPlaceholder: "粘贴你需要理解的句子、代码、论文段落或专业说明。",
@@ -146,8 +148,8 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     heroLead: "Paste papers, code, or technical text and get a structured explanation fast.",
     languageLabel: "Output language",
     languageHelp: "The interface updates immediately, and any existing result is regenerated in the newly selected language.",
-    emailLabel: "User email",
-    emailHelp: "Used to sync your history and usage records.",
+    emailLabel: "Current account",
+    emailHelp: "Shows the signed-in account and active license state.",
     inputEyebrow: "Input",
     inputTitle: "Text to explain",
     inputPlaceholder: "Paste the sentence, code, paper paragraph, or technical content you want to understand.",
@@ -195,8 +197,8 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     heroLead: "논문, 코드, 전문 텍스트를 넣으면 구조화된 해설을 바로 받아볼 수 있습니다.",
     languageLabel: "출력 언어",
     languageHelp: "언어를 바꾸면 화면이 바로 전환되고, 기존 결과도 새 언어로 다시 생성됩니다.",
-    emailLabel: "사용자 이메일",
-    emailHelp: "해설 기록과 사용 정보를 동기화할 때 사용합니다.",
+    emailLabel: "현재 계정",
+    emailHelp: "로그인한 계정과 라이선스 상태를 표시합니다.",
     inputEyebrow: "Input",
     inputTitle: "해설할 내용 입력",
     inputPlaceholder: "이해하고 싶은 문장, 코드, 논문 단락 또는 전문 텍스트를 붙여 넣으세요.",
@@ -244,8 +246,8 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
     heroLead: "論文、コード、専門テキストを入れると、構造化された説明をすぐ返します。",
     languageLabel: "出力言語",
     languageHelp: "切り替えると画面がすぐ更新され、既存の結果も新しい言語で再生成されます。",
-    emailLabel: "ユーザーEmail",
-    emailHelp: "解析履歴と利用情報の同期に使用します。",
+    emailLabel: "現在のアカウント",
+    emailHelp: "ログイン中のアカウントとライセンス状態を表示します。",
     inputEyebrow: "Input",
     inputTitle: "解析したい内容",
     inputPlaceholder: "理解したい文章、コード、論文の段落、専門的な説明を貼り付けてください。",
@@ -291,10 +293,6 @@ const copyByLanguage: Record<LanguageKey, WorkspaceCopy> = {
   },
 };
 
-function isSupportedUserEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && !/\.local$/i.test(value);
-}
-
 function ResultSection({
   title,
   children,
@@ -303,24 +301,24 @@ function ResultSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[24px] border border-neutral-700 bg-neutral-800 p-5">
-      <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">
+    <div className="rounded-[24px] border border-blue-100 bg-slate-50/80 p-5">
+      <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
         {title}
       </p>
-      <div className="mt-3 text-sm leading-7 text-neutral-200">{children}</div>
+      <div className="mt-3 text-sm leading-7 text-slate-700">{children}</div>
     </div>
   );
 }
 
 export function ExplainerWorkspace() {
   const [text, setText] = useState(defaultText);
-  const [userEmail, setUserEmail] = useState(DEFAULT_USER_EMAIL);
   const [outputLanguage, setOutputLanguage] = useState<LanguageKey>("zh-CN");
   const [result, setResult] = useState<ExplainResult | null>(null);
   const [error, setError] = useState("");
   const [isRunning, setIsRunning] = useState(false);
   const [copied, setCopied] = useState(false);
   const requestSerialRef = useRef(0);
+  const { user, isAuthenticated } = useAuthSession();
 
   const copy = copyByLanguage[outputLanguage];
   const charCount = text.trim().length;
@@ -341,10 +339,8 @@ export function ExplainerWorkspace() {
       return;
     }
 
-    const normalizedEmail = userEmail.trim() || DEFAULT_USER_EMAIL;
-
-    if (!isSupportedUserEmail(normalizedEmail)) {
-      setError(nextCopy.errors.invalidEmail);
+    if (!isAuthenticated) {
+      setError("Please sign in and activate a valid license code first.");
       return;
     }
 
@@ -359,7 +355,6 @@ export function ExplainerWorkspace() {
       const response = await explainText({
         text,
         mode: UNIFIED_EXPLAIN_MODE,
-        userEmail: normalizedEmail,
         outputLanguage: nextLanguage,
       });
 
@@ -433,53 +428,53 @@ export function ExplainerWorkspace() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.05),transparent_24%),linear-gradient(180deg,#121212_0%,#171717_48%,#0d0d0d_100%)] px-4 py-6 text-neutral-100 lg:px-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(96,165,250,0.16),transparent_24%),linear-gradient(180deg,#f8fbff_0%,#eef5ff_52%,#f8fbff_100%)] px-4 py-6 text-slate-900 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
-        <Card className="overflow-hidden border-neutral-800 bg-[linear-gradient(135deg,rgba(9,14,24,0.98),rgba(20,20,20,0.94))]">
+        <Card className="overflow-hidden border-blue-100 bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(239,246,255,0.96))]">
           <div className="grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-center">
-            <div className="rounded-[24px] border border-cyan-400/15 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_48%),rgba(255,255,255,0.03)] px-5 py-4 shadow-[0_18px_40px_rgba(8,145,178,0.16)]">
-              <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-200/72">
+            <div className="rounded-[24px] border border-blue-100 bg-[radial-gradient(circle_at_top_left,rgba(96,165,250,0.16),transparent_48%),rgba(255,255,255,0.9)] px-5 py-4 shadow-float">
+              <p className="text-[11px] uppercase tracking-[0.34em] text-blue-500">
                 Public Preview
               </p>
-              <h2 className="mt-2 text-lg font-semibold text-white">
+              <h2 className="mt-2 text-lg font-semibold text-slate-900">
                 Navia-SBP Deployment Notice
               </h2>
             </div>
 
-            <div className="relative overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.03] px-5 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-              <div className="absolute inset-y-5 left-0 w-px bg-gradient-to-b from-transparent via-cyan-300/70 to-transparent" />
-              <p className="pl-5 font-mono text-sm leading-7 text-slate-200 lg:text-[15px]">
+            <div className="relative overflow-hidden rounded-[28px] border border-blue-100 bg-white/90 px-5 py-5">
+              <div className="absolute inset-y-5 left-0 w-px bg-gradient-to-b from-transparent via-blue-400 to-transparent" />
+              <p className="pl-5 font-mono text-sm leading-7 text-slate-700 lg:text-[15px]">
                 {PUBLIC_PREVIEW_NOTICE}
               </p>
             </div>
           </div>
         </Card>
 
-        <Card className="border-neutral-800 bg-neutral-900/95 px-4 py-4 lg:px-5 lg:py-4">
+        <Card className="border-blue-100 bg-white/96 px-4 py-4 lg:px-5 lg:py-4">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-3xl space-y-2">
-              <h1 className="text-3xl font-semibold leading-tight text-white lg:text-[38px]">
+              <h1 className="text-3xl font-semibold leading-tight text-slate-900 lg:text-[38px]">
                 Navia-X (SBP): 把复杂内容讲清楚
               </h1>
-              <p className="max-w-2xl text-sm leading-5 text-neutral-400 lg:text-[14px]">
+              <p className="max-w-2xl text-sm leading-5 text-slate-600 lg:text-[14px]">
                 {copy.heroLead}
               </p>
             </div>
 
-            <div className="rounded-[22px] border border-cyan-400/18 bg-[linear-gradient(145deg,rgba(18,24,34,0.96),rgba(16,16,16,0.92))] px-4 py-3 shadow-[0_18px_40px_rgba(0,0,0,0.24)] lg:min-w-[440px]">
+            <div className="rounded-[22px] border border-blue-100 bg-[linear-gradient(145deg,rgba(255,255,255,0.98),rgba(239,246,255,0.94))] px-4 py-3 shadow-panel lg:min-w-[440px]">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[15px] bg-[linear-gradient(135deg,rgba(225,255,255,0.92),rgba(103,232,249,0.9))] text-neutral-950 shadow-[0_10px_22px_rgba(8,145,178,0.2)]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[15px] bg-[linear-gradient(135deg,rgba(219,234,254,0.96),rgba(96,165,250,0.22))] text-blue-700 shadow-float">
                     <Download className="h-4 w-4" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-[10px] uppercase tracking-[0.28em] text-cyan-200/72">
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-blue-500">
                       {copy.downloads.label}
                     </p>
-                    <p className="mt-1 text-[15px] font-semibold text-white">
+                    <p className="mt-1 text-[15px] font-semibold text-slate-900">
                       {copy.downloads.title}
                     </p>
-                    <p className="mt-1 text-[13px] leading-5 text-neutral-300">
+                    <p className="mt-1 text-[13px] leading-5 text-slate-600">
                       {copy.downloads.description}
                     </p>
                   </div>
@@ -489,21 +484,21 @@ export function ExplainerWorkspace() {
                   <a
                     href={DESKTOP_DOWNLOADS.apple.href}
                     download={DESKTOP_DOWNLOADS.apple.fileName}
-                    className="inline-flex items-center justify-center rounded-full border border-white/14 bg-white/95 px-4 py-2.5 text-sm font-semibold text-neutral-950 shadow-[0_10px_24px_rgba(255,255,255,0.14)] transition duration-200 hover:bg-white"
+                    className="inline-flex items-center justify-center rounded-full border border-line bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-panel transition duration-200 hover:border-blue-200 hover:bg-blue-50"
                   >
                     {copy.downloads.apple}
                   </a>
                   <a
                     href={DESKTOP_DOWNLOADS.windows.href}
                     download={DESKTOP_DOWNLOADS.windows.fileName}
-                    className="inline-flex items-center justify-center rounded-full border border-cyan-300/24 bg-cyan-400/12 px-4 py-2.5 text-sm font-semibold text-cyan-100 transition duration-200 hover:border-cyan-200/40 hover:bg-cyan-300/18"
+                    className="inline-flex items-center justify-center rounded-full border border-blue-100 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition duration-200 hover:border-blue-200 hover:bg-blue-100"
                   >
                     {copy.downloads.windows}
                   </a>
                 </div>
               </div>
 
-              <p className="mt-2 text-[11px] leading-4 text-neutral-500 lg:pl-[52px]">
+              <p className="mt-2 text-[11px] leading-4 text-slate-500 lg:pl-[52px]">
                 {copy.downloads.hint}
               </p>
             </div>
@@ -512,11 +507,11 @@ export function ExplainerWorkspace() {
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
           <div className="space-y-6">
-            <Card className="border-neutral-800 bg-neutral-900/95">
+            <Card className="border-blue-100 bg-white/96">
               <div className="grid gap-4 md:grid-cols-2">
-                <label className="rounded-[24px] border border-neutral-700 bg-neutral-800 p-4">
-                  <span className="mb-3 flex items-center gap-2 text-sm font-medium text-neutral-200">
-                    <Languages className="h-4 w-4 text-neutral-400" />
+                <label className="rounded-[24px] border border-blue-100 bg-slate-50/80 p-4">
+                  <span className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <Languages className="h-4 w-4 text-slate-500" />
                     {copy.languageLabel}
                   </span>
                   <select
@@ -524,7 +519,7 @@ export function ExplainerWorkspace() {
                     onChange={(event) =>
                       handleLanguageChange(event.target.value as LanguageKey)
                     }
-                    className="w-full rounded-2xl border border-neutral-600 bg-neutral-700 px-4 py-3 text-sm text-neutral-100 outline-none transition focus:border-neutral-400"
+                    className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
                   >
                     {languageOptions.map((language) => (
                       <option key={language.value} value={language.value}>
@@ -532,41 +527,61 @@ export function ExplainerWorkspace() {
                       </option>
                     ))}
                   </select>
-                  <p className="mt-3 text-xs leading-6 text-neutral-500">
+                  <p className="mt-3 text-xs leading-6 text-slate-500">
                     {copy.languageHelp}
                   </p>
                 </label>
 
-                <label className="rounded-[24px] border border-neutral-700 bg-neutral-800 p-4">
-                  <span className="mb-3 flex items-center gap-2 text-sm font-medium text-neutral-200">
-                    <Mail className="h-4 w-4 text-neutral-400" />
+                <div className="rounded-[24px] border border-blue-100 bg-slate-50/80 p-4">
+                  <span className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <Mail className="h-4 w-4 text-slate-500" />
                     {copy.emailLabel}
                   </span>
                   <Input
-                    type="email"
-                    value={userEmail}
-                    onChange={(event) => setUserEmail(event.target.value)}
-                    placeholder="you@example.com"
+                    value={
+                      user
+                        ? `${user.email} • ${formatPlanLabel(user.plan)} • ${formatAccessStatus(
+                            user.accessStatus
+                          )}`
+                        : "Sign in required"
+                    }
+                    readOnly
                   />
-                  <p className="mt-3 text-xs leading-6 text-neutral-500">
-                    {copy.emailHelp}
+                  <p className="mt-3 text-xs leading-6 text-slate-500">
+                    {isAuthenticated ? (
+                      <>
+                        Daily limit: {user?.dailyUsageLimit ?? 0}. Manage access in{" "}
+                        <Link href="/settings/billing" className="font-semibold text-blue-700">
+                          billing
+                        </Link>
+                        .
+                      </>
+                    ) : (
+                      <>
+                        Sign in on the{" "}
+                        <Link href="/login" className="font-semibold text-blue-700">
+                          login page
+                        </Link>{" "}
+                        and activate a license code before using the protected explain API.
+                      </>
+                    )}
                   </p>
-                </label>
+                </div>
               </div>
             </Card>
 
-            <Card className="border-neutral-800 bg-neutral-900/95">
+            <Card className="border-blue-100 bg-white/96">
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.28em] text-neutral-500">
+                    <p className="text-xs uppercase tracking-[0.28em] text-slate-400">
                       {copy.inputEyebrow}
                     </p>
-                    <h2 className="mt-2 text-2xl font-semibold text-white">
+                    <h2 className="mt-2 text-2xl font-semibold text-slate-900">
                       {copy.inputTitle}
                     </h2>
                   </div>
-                  <div className="rounded-full border border-neutral-700 bg-neutral-800 px-4 py-2 text-sm text-neutral-300">
+                  <div className="rounded-full border border-line bg-slate-50 px-4 py-2 text-sm text-slate-600">
                     {charCount} / {MAX_INPUT_LENGTH}
                   </div>
                 </div>
@@ -575,11 +590,11 @@ export function ExplainerWorkspace() {
                   value={text}
                   onChange={(event) => setText(event.target.value)}
                   placeholder={copy.inputPlaceholder}
-                  className="min-h-[320px] bg-neutral-800"
+                  className="min-h-[320px]"
                 />
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <Button onClick={handleExplain} disabled={isRunning}>
+                  <Button onClick={handleExplain} disabled={isRunning || !isAuthenticated}>
                     {isRunning ? (
                       <>
                         <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
@@ -604,7 +619,7 @@ export function ExplainerWorkspace() {
                 </div>
 
                 {error ? (
-                  <div className="rounded-[20px] border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                  <div className="rounded-[20px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
                     {error}
                   </div>
                 ) : null}
@@ -613,19 +628,19 @@ export function ExplainerWorkspace() {
           </div>
 
           <div className="space-y-6">
-            <Card className="border-neutral-800 bg-neutral-900/95">
+            <Card className="border-blue-100 bg-white/96">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.28em] text-neutral-500">
+                  <p className="text-xs uppercase tracking-[0.28em] text-slate-400">
                     {copy.resultEyebrow}
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-white">
+                  <h2 className="mt-2 text-2xl font-semibold text-slate-900">
                     {copy.resultTitle}
                   </h2>
                 </div>
-                <div className="rounded-[22px] border border-neutral-700 bg-neutral-800 px-4 py-3 text-right text-xs text-neutral-400">
+                <div className="rounded-[22px] border border-line bg-slate-50 px-4 py-3 text-right text-xs text-slate-500">
                   <div>
-                    {copy.outputLabel}：<span className="text-neutral-200">{currentLanguage?.label}</span>
+                    {copy.outputLabel}：<span className="text-slate-900">{currentLanguage?.label}</span>
                   </div>
                 </div>
               </div>
@@ -645,17 +660,17 @@ export function ExplainerWorkspace() {
                           {result.keywords.map((item) => (
                             <div
                               key={`${item.term}-${item.definition}`}
-                              className="rounded-2xl border border-neutral-700 bg-neutral-700 px-4 py-3"
+                              className="rounded-2xl border border-blue-100 bg-white px-4 py-3"
                             >
-                              <p className="font-medium text-white">{item.term}</p>
-                              <p className="mt-1 text-neutral-400">
+                              <p className="font-medium text-slate-900">{item.term}</p>
+                              <p className="mt-1 text-slate-600">
                                 {item.definition}
                               </p>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-neutral-400">{copy.sections.noKeywords}</p>
+                        <p className="text-slate-500">{copy.sections.noKeywords}</p>
                       )}
                     </ResultSection>
                     <ResultSection title={copy.sections.examples}>
@@ -666,37 +681,37 @@ export function ExplainerWorkspace() {
                           ))}
                         </ul>
                       ) : (
-                        <p className="text-neutral-400">{copy.sections.noExamples}</p>
+                        <p className="text-slate-500">{copy.sections.noExamples}</p>
                       )}
                     </ResultSection>
                     <ResultSection title={copy.sections.takeaway}>
                       <p>{result.takeaway}</p>
                     </ResultSection>
                     <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-[22px] border border-neutral-700 bg-neutral-800 px-4 py-4 text-sm text-neutral-300">
-                        {copy.sections.model}：<span className="text-white">{result.model}</span>
+                      <div className="rounded-[22px] border border-blue-100 bg-slate-50 px-4 py-4 text-sm text-slate-600">
+                        {copy.sections.model}：<span className="text-slate-900">{result.model}</span>
                       </div>
-                      <div className="rounded-[22px] border border-neutral-700 bg-neutral-800 px-4 py-4 text-sm text-neutral-300">
+                      <div className="rounded-[22px] border border-blue-100 bg-slate-50 px-4 py-4 text-sm text-slate-600">
                         {copy.sections.latency}：
-                        <span className="text-white"> {result.latencyMs} ms</span>
+                        <span className="text-slate-900"> {result.latencyMs} ms</span>
                       </div>
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-[24px] border border-dashed border-neutral-700 bg-neutral-800/60 p-6">
+                  <div className="rounded-[24px] border border-dashed border-blue-100 bg-slate-50/80 p-6">
                     <div className="flex items-start gap-3">
                       {isRunning ? (
-                        <LoaderCircle className="mt-1 h-5 w-5 animate-spin text-neutral-500" />
+                        <LoaderCircle className="mt-1 h-5 w-5 animate-spin text-slate-500" />
                       ) : (
-                        <Globe2 className="mt-1 h-5 w-5 text-neutral-500" />
+                        <Globe2 className="mt-1 h-5 w-5 text-slate-500" />
                       )}
                       <div>
-                        <p className="text-base font-medium text-white">
+                        <p className="text-base font-medium text-slate-900">
                           {isRunning
                             ? copy.buttons.explaining
                             : copy.resultWaitingTitle}
                         </p>
-                        <p className="mt-2 text-sm leading-7 text-neutral-400">
+                        <p className="mt-2 text-sm leading-7 text-slate-500">
                           {isRunning
                             ? copy.resultLoadingBody
                             : copy.resultWaitingBody}

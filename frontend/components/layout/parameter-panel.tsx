@@ -10,38 +10,38 @@ const settings = [
 export function ParameterPanel() {
   return (
     <div className="space-y-4">
-      <Card className="border-white/10 bg-slate-950/68 p-5 text-white shadow-[0_24px_90px_rgba(0,0,0,0.36)]">
-        <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
+      <Card className="border-blue-100 p-5">
+        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
           Right Panel
         </p>
-        <h3 className="mt-2 text-lg font-semibold text-white">参数与状态</h3>
+        <h3 className="mt-2 text-lg font-semibold text-slate-900">Access health</h3>
         <div className="mt-4 space-y-3">
-          <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4">
-            <p className="text-sm text-slate-400">今日调用</p>
-            <p className="mt-1 text-2xl font-semibold text-white">128</p>
+          <div className="rounded-2xl border border-blue-100 bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">Today&apos;s protected requests</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-900">128</p>
           </div>
-          <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4">
-            <p className="text-sm text-slate-400">平均耗时</p>
-            <p className="mt-1 text-2xl font-semibold text-white">2.1s</p>
+          <div className="rounded-2xl border border-blue-100 bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">Average latency</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-900">2.1s</p>
           </div>
-          <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4">
-            <p className="text-sm text-slate-400">活跃模型</p>
-            <p className="mt-1 text-2xl font-semibold text-white">
+          <div className="rounded-2xl border border-blue-100 bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">Active model</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-900">
               OpenAI
             </p>
           </div>
         </div>
       </Card>
 
-      <Card className="border-white/10 bg-slate-950/68 p-5 text-white shadow-[0_24px_90px_rgba(0,0,0,0.36)]">
-        <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
+      <Card className="border-blue-100 p-5">
+        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
           Product Notes
         </p>
         <div className="mt-4 space-y-3">
           {settings.map((item) => (
             <div
               key={item}
-              className="rounded-2xl border border-white/8 bg-white/[0.04] p-4 text-sm text-slate-300"
+              className="rounded-2xl border border-blue-100 bg-slate-50 p-4 text-sm text-slate-600"
             >
               {item}
             </div>
